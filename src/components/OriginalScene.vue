@@ -23,11 +23,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="window-height column">
-    <div class="col-6 canvas-container">
+  <div class="full-height column">
+    <div class="col canvas-container">
       <perspective-view :scene="scene" />
     </div>
-    <div class="col-6 canvas-container">
+    <div class="col canvas-container">
       <orthographic-view :scene="scene" />
     </div>
   </div>
