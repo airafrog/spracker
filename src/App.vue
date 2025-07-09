@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import { useQuasar } from "quasar";
+
 import OriginalScene from "./components/OriginalScene.vue";
 import TheToolbar from "./components/TheToolbar.vue";
+
+const $q = useQuasar();
+$q.dark.set(true);
 </script>
 
 <template>
@@ -33,5 +38,6 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
+  background-color: #2f3127;
 }
 </style>
