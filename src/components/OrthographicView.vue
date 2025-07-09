@@ -21,9 +21,8 @@ onMounted(() => {
     canvasContainer.value.clientWidth,
     canvasContainer.value.clientHeight
   );
-  renderer.setAnimationLoop(animate);
+  renderer.setAnimationLoop(() => renderer.render(props.scene, camera));
 
-  // ortho camera based on the canvas size
   const width = canvasContainer.value.clientWidth;
   const height = canvasContainer.value.clientHeight;
   const aspect = width / height;
@@ -36,10 +35,6 @@ onMounted(() => {
     1000 // far
   );
   camera.position.z = 5;
-
-  function animate() {
-    renderer.render(props.scene, camera);
-  }
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
