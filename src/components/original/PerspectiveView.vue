@@ -25,12 +25,7 @@ onMounted(() => {
 
   const width = canvasContainer.value.clientWidth;
   const height = canvasContainer.value.clientHeight;
-  const camera = new THREE.PerspectiveCamera(
-    75, // fov
-    width / height, // aspect
-    0.1, // near
-    1000 // far
-  );
+  const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
   camera.position.z = 5;
 
   resizeFunction = () => {
