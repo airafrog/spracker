@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { onMounted, onUnmounted, ref } from "vue";
 
 const props = defineProps<{
@@ -22,7 +23,7 @@ onMounted(() => {
     canvasContainer.value.clientWidth,
     canvasContainer.value.clientHeight
   );
-  renderer.setAnimationLoop(() => renderer.render(props.scene, camera));
+  renderer.setAnimationLoop(animate);
 
   const width = canvasContainer.value.clientWidth;
   const height = canvasContainer.value.clientHeight;
@@ -36,6 +37,13 @@ onMounted(() => {
     1000 // far
   );
   camera.position.z = 5;
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  function animate() {
+    controls.update();
+    renderer.render(props.scene, camera);
+  }
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
