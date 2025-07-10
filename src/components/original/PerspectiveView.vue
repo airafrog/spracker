@@ -8,6 +8,7 @@ const props = defineProps<{
 
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
+let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
 onMounted(() => {
@@ -16,7 +17,7 @@ onMounted(() => {
     throw new Error("Canvas container is not defined");
   }
 
-  const renderer = new THREE.WebGLRenderer({ canvas: canvas.value });
+  renderer = new THREE.WebGLRenderer({ canvas: canvas.value });
   renderer.setSize(
     canvasContainer.value.clientWidth,
     canvasContainer.value.clientHeight
@@ -40,6 +41,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  if (renderer) renderer.dispose();
   window.removeEventListener("resize", resizeFunction);
 });
 </script>

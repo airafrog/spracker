@@ -16,7 +16,12 @@ const layerStore = useLayerStore();
 
     <div class="col q-gutter-y-sm q-pa-md">
       <div v-for="(layer, id) in layerStore.layers" :key="id">
-        <layer-card v-model="layer.height" :layer="layer" />
+        <layer-card
+          v-model:height="layer.height"
+          v-model:name="layer.name"
+          :id="layer.id"
+          @remove="layerStore.removeLayer"
+        />
       </div>
     </div>
 

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { Layer } from "../types";
-
 const props = defineProps<{
-  layer: Layer;
+  id: string;
 }>();
 
-const layerHeight = defineModel<number>({ required: true });
+const name = defineModel<string>("name", { required: true });
+const height = defineModel<number>("height", { required: true });
 
 const emit = defineEmits<{
   (e: "remove", id: string): void;
@@ -15,13 +14,9 @@ const emit = defineEmits<{
 <template>
   <div class="layer-card bg-primary">
     <div class="flex justify-between items-center">
-      <q-btn
-        icon="fa-solid fa-minus"
-        flat
-        @click="emit('remove', props.layer.id)"
-      />
-      <p class="q-mb-none">{{ props.layer.name }}</p>
-      <q-input v-model="layerHeight" type="number" step="0.01" dense />
+      <q-btn icon="fa-solid fa-minus" flat @click="emit('remove', props.id)" />
+      <q-input v-model="name" type="text" dense />
+      <q-input v-model="height" type="number" step="0.01" dense />
     </div>
   </div>
 </template>

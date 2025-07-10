@@ -1,25 +1,25 @@
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 import type { Layer } from "../types";
 
 export const useLayerStore = defineStore("layer", () => {
-  const layers = ref<{ [id: string]: Layer }>({});
+  const layers = reactive<{ [id: string]: Layer }>({});
 
   function addLayer() {
     const id = uuidv4();
-    const layerCount = Object.keys(layers.value).length;
+    const layerCount = Object.keys(layers).length;
 
-    layers.value[id] = {
+    layers[id] = {
       id,
       name: `Layer ${layerCount}`,
-      height: ref(0),
+      height: 0,
     };
   }
 
   function removeLayer(uuid: string) {
-    delete layers.value[uuid];
+    delete layers[uuid];
   }
 
   return {

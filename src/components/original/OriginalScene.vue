@@ -3,7 +3,7 @@ import * as THREE from "three";
 
 import PerspectiveView from "./PerspectiveView.vue";
 import OrthographicView from "./OrthographicView.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const cameraMode = ref<"perspective" | "orthographic">("perspective");
 const scene = new THREE.Scene();
@@ -19,12 +19,16 @@ onMounted(() => {
   const cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 
-  const animate = () => {
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    requestAnimationFrame(animate);
-  };
-  animate();
+  // const animate = () => {
+  //   cube.rotation.x += 0.01;
+  //   cube.rotation.y += 0.01;
+  //   requestAnimationFrame(animate);
+  // };
+  // animate();
+});
+
+onUnmounted(() => {
+  scene.clear();
 });
 </script>
 
