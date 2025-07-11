@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 
-import OriginalScene from "./components/original/OriginalScene.vue";
+import OriginalScene from "./components/OriginalScene.vue";
 import TheToolbar from "./components/TheToolbar.vue";
 
 const $q = useQuasar();
