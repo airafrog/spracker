@@ -60,7 +60,7 @@ onUnmounted(() => {
 <template>
   <div class="full-height" style="position: relative">
     <q-btn
-      :label="cameraService.getCameraMode() === 'perspective' ? 'p' : 'o'"
+      :label="cameraService.getCameraMode().value === 'perspective' ? 'p' : 'o'"
       class="camera-mode-btn"
       no-caps
       @click="cameraService.toggleCameraMode()"
