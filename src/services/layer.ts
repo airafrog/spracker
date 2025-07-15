@@ -16,7 +16,7 @@ export class LayerService {
 
   canvas: HTMLCanvasElement = document.createElement("canvas");
 
-  constructor(gltf: GLTF, height: number, sliceThickness: number = 1) {
+  constructor(gltf: GLTF, height: number, sliceThickness: number = 2) {
     this.gltf = gltf;
     this.height = height; // percentage (0-1)
     this.sliceThickness = sliceThickness;
