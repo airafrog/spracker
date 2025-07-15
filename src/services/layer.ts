@@ -5,27 +5,31 @@ export class LayerService {
   private gltf: GLTF;
   private gltfBox = new THREE.Box3();
   public gltfSize = new THREE.Vector3();
-  private sliceThickness: number;
+  private layerThickness: number;
   private layerHeight = 0;
+
+  protected static canvas: HTMLCanvasElement = document.createElement("canvas");
+  public canvasDataUrl = LayerService.canvas.toDataURL();
 
   private scene = new THREE.Scene();
   private static camera = new THREE.OrthographicCamera();
-  private renderer: THREE.WebGLRenderer;
+  private static renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    canvas: LayerService.canvas,
+  });
   private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
   private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
 
-  public canvas: HTMLCanvasElement = document.createElement("canvas");
-
-  constructor(gltf: GLTF, layerHeight: number, sliceThickness: number = 10) {
+  constructor(gltf: GLTF, layerHeight: number, layerThickness: number = 10) {
     if (layerHeight < 0 || layerHeight > 1) {
       throw new Error("Height must be a percentage between 0 and 1");
     }
-    if (sliceThickness <= 0) {
+    if (layerThickness <= 0) {
       throw new Error("Slice thickness must be positive");
     }
 
     this.gltf = gltf;
-    this.sliceThickness = sliceThickness;
+    this.layerThickness = layerThickness;
 
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
@@ -36,16 +40,8 @@ export class LayerService {
     this.setLayerHeight(layerHeight);
     this.initializeCamera();
 
-    this.renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      canvas: this.canvas,
-    });
-    this.renderer.clippingPlanes = [
-      this.lowerClippingPlane,
-      this.upperClippingPlane,
-    ];
-    this.renderer.localClippingEnabled = true;
-    this.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
+    LayerService.renderer.localClippingEnabled = true;
+    LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
 
     // Enable clipping on all materials in the scene
     this.gltf.scene.traverse((child) => {
@@ -86,7 +82,12 @@ export class LayerService {
   }
 
   render() {
-    this.renderer.render(this.scene, LayerService.camera);
+    LayerService.renderer.clippingPlanes = [
+      this.lowerClippingPlane,
+      this.upperClippingPlane,
+    ];
+    LayerService.renderer.render(this.scene, LayerService.camera);
+    this.canvasDataUrl = LayerService.canvas.toDataURL();
   }
 
   setLayerHeight(newHeight: number) {
@@ -95,13 +96,13 @@ export class LayerService {
 
     this.lowerClippingPlane.constant = -(
       actualHeight -
-      this.sliceThickness / 2
+      this.layerThickness / 2
     );
-    this.upperClippingPlane.constant = actualHeight + this.sliceThickness / 2;
+    this.upperClippingPlane.constant = actualHeight + this.layerThickness / 2;
   }
 
-  updateSliceThickness(newThickness: number) {
-    this.sliceThickness = newThickness;
+  updateLayerThickness(newThickness: number) {
+    this.layerThickness = newThickness;
     const actualHeight = this.getActualHeight();
     this.lowerClippingPlane.constant = -(actualHeight - newThickness / 2);
     this.upperClippingPlane.constant = actualHeight + newThickness / 2;

@@ -49,10 +49,15 @@ onMounted(() => {
   props.layers.forEach((layer, i) => {
     const separation = layer.gltfSize.y / layerCount;
 
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load(layer.canvasDataUrl, (texture) => {
+      texture.needsUpdate = true;
+    });
+
     const layerMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(layer.gltfSize.x, layer.gltfSize.z),
       new THREE.MeshBasicMaterial({
-        map: new THREE.CanvasTexture(layer.canvas),
+        map: texture,
         transparent: true,
         side: THREE.DoubleSide,
       })

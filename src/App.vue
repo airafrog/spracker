@@ -35,7 +35,7 @@ onMounted(async () => {
         <img
           v-for="(layer, index) in layers"
           :key="index"
-          :src="layer.canvas.toDataURL()"
+          :src="layer.canvasDataUrl"
         />
       </div>
 
