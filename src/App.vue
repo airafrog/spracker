@@ -5,6 +5,7 @@ import { onMounted, shallowRef } from "vue";
 
 import OriginalScene from "./components/OriginalScene.vue";
 import StackedScene from "./components/StackedScene.vue";
+import TheToolbar from "./components/TheToolbar.vue";
 import { gltfService } from "./services/gltf";
 import { LayerService } from "./services/layer";
 
@@ -27,7 +28,9 @@ onMounted(async () => {
 <template>
   <div class="window-height">
     <div class="row full-height">
-      <div class="col"></div>
+      <div class="col">
+        <the-toolbar />
+      </div>
 
       <div class="col">
         <original-scene v-if="gltf" :gltf="gltf" :layers="layers" />
