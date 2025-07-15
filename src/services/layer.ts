@@ -54,12 +54,16 @@ export class LayerService {
     this.camera.position.set(0, size.y, 0);
     this.camera.lookAt(0, 0, 0);
 
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
+    this.renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      canvas: this.canvas,
+    });
     this.renderer.clippingPlanes = [
       this.lowerClippingPlane,
       this.upperClippingPlane,
     ];
     this.renderer.localClippingEnabled = true;
+    this.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
 
     this.scene.add(gltf.scene);
 
