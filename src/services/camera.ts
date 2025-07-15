@@ -16,12 +16,12 @@ export class CameraService {
     this.orthographicCamera = new THREE.OrthographicCamera();
     this.camera = this.perspectiveCamera;
 
-    this.perspectiveCamera.position.set(0, 0, 10);
+    this.perspectiveCamera.position.set(0, 10, 10);
     this.perspectiveCamera.lookAt(0, 0, 0);
-    this.orthographicCamera.position.set(0, 0, 10);
+    this.orthographicCamera.position.set(0, 10, 10);
     this.orthographicCamera.lookAt(0, 0, 0);
-    this.orthographicCamera.near = -100;
-    this.orthographicCamera.far = 100;
+    this.orthographicCamera.near = -500;
+    this.orthographicCamera.far = 500;
   }
 
   public toggleCameraMode() {
@@ -61,6 +61,11 @@ export class CameraService {
     this.orthographicCamera.top = 5;
     this.orthographicCamera.bottom = -5;
     this.orthographicCamera.updateProjectionMatrix();
+  }
+
+  public setPosition(x: number, y: number, z: number) {
+    this.perspectiveCamera.position.set(x, y, z);
+    this.orthographicCamera.position.set(x, y, z);
   }
 
   public animate(_delta?: number) {

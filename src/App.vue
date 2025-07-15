@@ -27,16 +27,10 @@ onMounted(async () => {
 <template>
   <div class="window-height">
     <div class="row full-height">
-      <div class="col">
-        <original-scene v-if="gltf" :gltf="gltf" />
-      </div>
+      <div class="col"></div>
 
       <div class="col">
-        <img
-          v-for="(layer, index) in layers"
-          :key="index"
-          :src="layer.canvasDataUrl"
-        />
+        <original-scene v-if="gltf" :gltf="gltf" :layers="layers" />
       </div>
 
       <div class="col">

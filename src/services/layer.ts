@@ -5,7 +5,7 @@ export class LayerService {
   private gltf: GLTF;
   private gltfBox = new THREE.Box3();
   public gltfSize = new THREE.Vector3();
-  private layerThickness: number;
+  private layerThickness = 0;
   private layerHeight = 0;
 
   protected static canvas: HTMLCanvasElement = document.createElement("canvas");
@@ -39,14 +39,10 @@ export class LayerService {
     }
 
     this.gltf = gltf;
-    this.layerThickness = layerThickness;
-
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
-
     this.setLayerHeight(layerHeight);
     this.setLayerThickness(layerThickness);
-
     this.configureCamera();
 
     // Enable clipping on all materials in the scene
@@ -86,7 +82,11 @@ export class LayerService {
     LayerService.camera.lookAt(0, 0, 0);
   }
 
-  render() {
+  private getActualHeight(): number {
+    return this.gltfBox.min.y + this.layerHeight * this.gltfSize.y;
+  }
+
+  public render() {
     LayerService.renderer.clippingPlanes = [
       this.lowerClippingPlane,
       this.upperClippingPlane,
@@ -95,7 +95,7 @@ export class LayerService {
     this.canvasDataUrl = LayerService.canvas.toDataURL();
   }
 
-  setLayerHeight(newHeight: number) {
+  public setLayerHeight(newHeight: number) {
     this.layerHeight = newHeight; // percentage (0-1)
     const actualHeight = this.getActualHeight();
 
@@ -106,14 +106,18 @@ export class LayerService {
     this.upperClippingPlane.constant = actualHeight + this.layerThickness / 2;
   }
 
-  setLayerThickness(newThickness: number) {
+  public getLayerHeight(): number {
+    return this.layerHeight;
+  }
+
+  public setLayerThickness(newThickness: number) {
     this.layerThickness = newThickness;
     const actualHeight = this.getActualHeight();
     this.lowerClippingPlane.constant = -(actualHeight - newThickness / 2);
     this.upperClippingPlane.constant = actualHeight + newThickness / 2;
   }
 
-  private getActualHeight(): number {
-    return this.gltfBox.min.y + this.layerHeight * this.gltfSize.y;
+  public getLayerThickness(): number {
+    return this.layerThickness;
   }
 }
