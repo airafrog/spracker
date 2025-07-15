@@ -47,10 +47,10 @@ onMounted(() => {
 
   const layerCount = props.layers.length;
   props.layers.forEach((layer, i) => {
-    const separation = layer.size.y / layerCount;
+    const separation = layer.gltfSize.y / layerCount;
 
     const layerMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(layer.size.x, layer.size.z),
+      new THREE.PlaneGeometry(layer.gltfSize.x, layer.gltfSize.z),
       new THREE.MeshBasicMaterial({
         map: new THREE.CanvasTexture(layer.canvas),
         transparent: true,
@@ -59,7 +59,6 @@ onMounted(() => {
     );
     layerMesh.position.set(0, separation * i, 0);
     layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
-    layerMesh.name = `Layer ${layer.height}`;
     scene.add(layerMesh);
   });
 
