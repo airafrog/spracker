@@ -3,6 +3,7 @@ import * as THREE from "three";
 
 export class LayerService {
   private gltf: GLTF;
+  public size: THREE.Vector3;
   height: number; // percentage (0-1)
   sliceThickness: number;
   private modelHeight: number; // actual model height
@@ -16,14 +17,14 @@ export class LayerService {
 
   canvas: HTMLCanvasElement = document.createElement("canvas");
 
-  constructor(gltf: GLTF, height: number, sliceThickness: number = 2) {
+  constructor(gltf: GLTF, height: number, sliceThickness: number = 10) {
     this.gltf = gltf;
     this.height = height; // percentage (0-1)
     this.sliceThickness = sliceThickness;
 
     const box = new THREE.Box3().setFromObject(gltf.scene);
-    const size = box.getSize(new THREE.Vector3());
-    this.modelHeight = size.y;
+    this.size = box.getSize(new THREE.Vector3());
+    this.modelHeight = this.size.y;
     this.modelMinY = box.min.y;
 
     // Convert percentage height to actual world position
@@ -44,14 +45,14 @@ export class LayerService {
     );
 
     this.camera = new THREE.OrthographicCamera(
-      -size.x / 2,
-      size.x / 2,
-      size.z / 2, // y is up
-      -size.z / 2, // y is up
+      -this.size.x / 2,
+      this.size.x / 2,
+      this.size.z / 2, // y is up
+      -this.size.z / 2, // y is up
       -100,
       100
     );
-    this.camera.position.set(0, size.y, 0);
+    this.camera.position.set(0, this.size.y, 0);
     this.camera.lookAt(0, 0, 0);
 
     this.renderer = new THREE.WebGLRenderer({

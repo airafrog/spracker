@@ -4,6 +4,7 @@ import { useQuasar } from "quasar";
 import { onMounted, shallowRef } from "vue";
 
 import OriginalScene from "./components/OriginalScene.vue";
+import StackedScene from "./components/StackedScene.vue";
 import { gltfService } from "./services/gltf";
 import { LayerService } from "./services/layer";
 
@@ -16,7 +17,7 @@ const layers = shallowRef<LayerService[]>([]);
 onMounted(async () => {
   gltf.value = await gltfService.load("/models/car/scene.gltf");
 
-  for (let i = 0.1; i < 1; i += 0.1) {
+  for (let i = 0; i < 1; i += 0.1) {
     const layer = new LayerService(gltf.value, i);
     layers.value.push(layer);
   }
@@ -38,9 +39,9 @@ onMounted(async () => {
         />
       </div>
 
-      <!-- <div class="col">
-       
-      </div> -->
+      <div class="col">
+        <stacked-scene v-if="gltf" :layers="layers" />
+      </div>
     </div>
   </div>
 </template>
