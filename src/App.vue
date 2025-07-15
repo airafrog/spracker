@@ -20,7 +20,7 @@ $q.dark.set(true);
       </div>
 
       <div class="col">
-        <original-scene />
+        <!-- <original-scene /> -->
       </div>
     </div>
   </div>

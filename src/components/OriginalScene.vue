@@ -3,8 +3,13 @@ import * as THREE from "three";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import { CameraService } from "../services/camera";
+import { gltfService } from "../services/gltf";
+import { useLayerStore } from "../stores";
+
+import { LayerService } from "../services/layer";
 
 const scene = new THREE.Scene();
+
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
@@ -35,10 +40,8 @@ onMounted(() => {
     renderer.render(scene, cameraService.camera);
   }
 
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
+  const light = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(light);
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
@@ -48,7 +51,16 @@ onMounted(() => {
     cameraService.resize(canvasWidth, canvasHeight);
   };
   window.addEventListener("resize", resizeFunction);
+
+  loadModel();
 });
+
+async function loadModel() {
+  const gltf = await gltfService.load("/models/car/scene.gltf");
+  scene.add(gltf.scene);
+
+  const layer = new LayerService(gltf, 0.5);
+}
 
 onUnmounted(() => {
   scene.clear();

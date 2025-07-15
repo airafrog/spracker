@@ -20,6 +20,8 @@ export class CameraService {
     this.perspectiveCamera.lookAt(0, 0, 0);
     this.orthographicCamera.position.set(0, 0, 10);
     this.orthographicCamera.lookAt(0, 0, 0);
+    this.orthographicCamera.near = -100;
+    this.orthographicCamera.far = 100;
   }
 
   public toggleCameraMode() {
