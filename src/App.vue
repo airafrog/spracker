@@ -17,8 +17,8 @@ const layers = shallowRef<LayerService[]>([]);
 onMounted(async () => {
   gltf.value = await gltfService.load("/models/car/scene.gltf");
 
-  for (let i = 0; i < 1; i += 0.1) {
-    const layer = new LayerService(gltf.value, i);
+  for (let i = 0; i < 1; i += 0.05) {
+    const layer = new LayerService(gltf.value, i, 10);
     layers.value.push(layer);
   }
 });

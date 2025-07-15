@@ -12,15 +12,25 @@ export class LayerService {
   public canvasDataUrl = LayerService.canvas.toDataURL();
 
   private scene = new THREE.Scene();
+  private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
+  private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
+
   private static camera = new THREE.OrthographicCamera();
+  static {
+    LayerService.camera.near = -500;
+    LayerService.camera.far = 500;
+  }
+
   private static renderer = new THREE.WebGLRenderer({
     alpha: true,
     canvas: LayerService.canvas,
   });
-  private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
-  private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
+  static {
+    LayerService.renderer.localClippingEnabled = true;
+    LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
+  }
 
-  constructor(gltf: GLTF, layerHeight: number, layerThickness: number = 10) {
+  constructor(gltf: GLTF, layerHeight: number, layerThickness: number) {
     if (layerHeight < 0 || layerHeight > 1) {
       throw new Error("Height must be a percentage between 0 and 1");
     }
@@ -34,14 +44,10 @@ export class LayerService {
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
 
-    this.scene = new THREE.Scene();
-    this.scene.add(this.gltf.scene);
-
     this.setLayerHeight(layerHeight);
-    this.initializeCamera();
+    this.setLayerThickness(layerThickness);
 
-    LayerService.renderer.localClippingEnabled = true;
-    LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
+    this.configureCamera();
 
     // Enable clipping on all materials in the scene
     this.gltf.scene.traverse((child) => {
@@ -61,6 +67,7 @@ export class LayerService {
         }
       }
     });
+    this.scene.add(this.gltf.scene);
 
     const light = new THREE.AmbientLight(0xffffff, 1);
     this.scene.add(light);
@@ -68,13 +75,11 @@ export class LayerService {
     this.render();
   }
 
-  private initializeCamera() {
+  private configureCamera() {
     LayerService.camera.left = -this.gltfSize.x / 2;
     LayerService.camera.right = this.gltfSize.x / 2;
     LayerService.camera.top = this.gltfSize.z / 2;
     LayerService.camera.bottom = -this.gltfSize.z / 2;
-    LayerService.camera.near = -100;
-    LayerService.camera.far = 100;
     LayerService.camera.updateProjectionMatrix();
 
     LayerService.camera.position.set(0, this.gltfSize.y, 0);
@@ -101,7 +106,7 @@ export class LayerService {
     this.upperClippingPlane.constant = actualHeight + this.layerThickness / 2;
   }
 
-  updateLayerThickness(newThickness: number) {
+  setLayerThickness(newThickness: number) {
     this.layerThickness = newThickness;
     const actualHeight = this.getActualHeight();
     this.lowerClippingPlane.constant = -(actualHeight - newThickness / 2);

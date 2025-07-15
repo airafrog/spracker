@@ -44,7 +44,6 @@ onMounted(() => {
   scene.add(light);
 
   // Make a plane for each layer
-
   const layerCount = props.layers.length;
   props.layers.forEach((layer, i) => {
     const separation = layer.gltfSize.y / layerCount;
