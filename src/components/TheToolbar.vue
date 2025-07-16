@@ -12,7 +12,7 @@ const props = defineProps<{
 const layerStore = useLayerStore();
 
 onMounted(() => {
-  layerStore.addEvenlySpacedLayers(props.gltf, 10);
+  layerStore.addEvenlySpacedLayers(props.gltf, 20);
 });
 </script>
 
