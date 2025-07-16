@@ -35,9 +35,16 @@ function handleNameUpdate(value: string | number | null) {
         <q-input
           :model-value="props.layer.name"
           type="text"
+          class="q-mr-auto"
           filled
           dense
           @update:model-value="handleNameUpdate"
+        />
+
+        <q-btn
+          icon="fas fa-close"
+          flat
+          @click="layerStore.activeLayer = null"
         />
       </q-toolbar>
 
@@ -71,12 +78,12 @@ function handleNameUpdate(value: string | number | null) {
         class="flex justify-center q-pa-lg full-height"
         :style="{ 'background-color': settingsStore.pngBackgroundHex }"
       >
-        <img :src="props.layer.canvasDataUrl" style="height: 100%" />
+        <q-img :src="props.layer.canvasDataUrl" fit="contain" />
         <q-btn
           icon="fas fa-fill-drip"
           size="small"
           color="primary"
-          style="position: absolute; left: 0; bottom: 0"
+          style="position: absolute; left: 0.5em; bottom: 0.5em"
           round
         >
           <q-popup-proxy>
