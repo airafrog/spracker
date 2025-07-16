@@ -29,11 +29,12 @@ export const useLayerStore = defineStore("layer", () => {
   function addEvenlySpacedLayers(
     gltf: GLTF,
     layerCount: number,
-    layerThickness: number
+    thickness: number
   ) {
-    const layerHeight = 1 / layerCount;
+    const separation = 1 / layerCount;
     for (let i = 0; i < layerCount; i++) {
-      addLayer(gltf, layerHeight * i, layerThickness);
+      const height = Math.floor(separation * i * 100) / 100; // Round to 2 decimal places
+      addLayer(gltf, height, thickness);
     }
   }
 
