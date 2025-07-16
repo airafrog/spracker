@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-import { useLayerStore } from "../stores";
+import { useLayerStore, useSettingsStore } from "../stores";
 import type { Layer } from "../types";
 
 const props = defineProps<{
@@ -9,7 +7,7 @@ const props = defineProps<{
 }>();
 
 const layerStore = useLayerStore();
-const hex = ref("#23343d");
+const settingsStore = useSettingsStore();
 
 function handleThicknessUpdate(value: number | string | null) {
   if (value === null) return;
@@ -71,7 +69,7 @@ function handleNameUpdate(value: string | number | null) {
     <div class="col">
       <div
         class="flex justify-center q-pa-lg full-height"
-        :style="{ 'background-color': hex }"
+        :style="{ 'background-color': settingsStore.pngBackgroundHex }"
       >
         <img :src="props.layer.canvasDataUrl" style="height: 100%" />
         <q-btn
@@ -82,7 +80,7 @@ function handleNameUpdate(value: string | number | null) {
           round
         >
           <q-popup-proxy>
-            <q-color v-model="hex" />
+            <q-color v-model="settingsStore.pngBackgroundHex" />
           </q-popup-proxy>
         </q-btn>
       </div>
