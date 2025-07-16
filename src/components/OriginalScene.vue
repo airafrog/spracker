@@ -4,11 +4,9 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import { CameraService } from "../services/camera";
-import type { LayerService } from "../services/layer";
 
 const props = defineProps<{
   gltf: GLTF;
-  layers: LayerService[];
 }>();
 
 const scene = new THREE.Scene();

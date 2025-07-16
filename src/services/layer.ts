@@ -120,4 +120,19 @@ export class LayerService {
   public getLayerThickness(): number {
     return this.layerThickness;
   }
+
+  public dispose() {
+    this.scene.remove(this.gltf.scene);
+    this.gltf.scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((material) => {
+            material.dispose();
+          });
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+  }
 }

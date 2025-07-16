@@ -3,11 +3,7 @@ import * as THREE from "three";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import { CameraService } from "../services/camera";
-import type { LayerService } from "../services/layer";
-
-const props = defineProps<{
-  layers: LayerService[];
-}>();
+import { useLayerStore } from "../stores";
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
@@ -15,6 +11,8 @@ const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
+
+const layerStore = useLayerStore();
 
 onMounted(() => {
   if (!canvas.value) throw new Error("Canvas is not defined");
@@ -44,8 +42,9 @@ onMounted(() => {
   scene.add(light);
 
   // Make a plane for each layer
-  const layerCount = props.layers.length;
-  props.layers.forEach((layer, i) => {
+  const layerCount = layerStore.layerItems.length;
+  layerStore.layerItems.forEach((layerItem, i) => {
+    const { layer } = layerItem;
     const separation = layer.gltfSize.y / layerCount;
 
     const textureLoader = new THREE.TextureLoader();
