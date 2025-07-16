@@ -6,8 +6,8 @@ export class LayerService {
   private gltf: GLTF;
   private gltfBox = new THREE.Box3();
   public gltfSize = new THREE.Vector3();
-  private layerThickness = 0;
-  private layerHeight = 0;
+  private thickness = 0;
+  private height = 0;
   private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
   private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
   protected static canvas = document.createElement("canvas");
@@ -27,12 +27,12 @@ export class LayerService {
     LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
   }
 
-  constructor(gltf: GLTF, layerHeight: number, layerThickness: number) {
+  constructor(gltf: GLTF, layerHeight: number, thickness: number) {
     this.gltf = gltf;
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
-    this.setLayerHeight(layerHeight);
-    this.setLayerThickness(layerThickness);
+    this.setHeight(layerHeight);
+    this.setThickness(thickness);
     this.configureCamera();
 
     // Enable clipping on all materials in the scene
@@ -75,7 +75,7 @@ export class LayerService {
    * multiplied by the GLTF model's height.
    */
   public getActualLayerHeight(): number {
-    return this.gltfBox.min.y + this.layerHeight * this.gltfSize.y;
+    return this.gltfBox.min.y + this.height * this.gltfSize.y;
   }
 
   /**
@@ -96,53 +96,38 @@ export class LayerService {
 
   /**
    * Sets the layer height as a percentage of the GLTF model's height.
-   * @param newHeight - The new height as a percentage (0-1).
+   * @param height - The new height as a percentage (0-1).
    * @throws Will throw an error if the new height is not between 0 and 1.
    */
-  public setLayerHeight(newHeight: number) {
-    if (newHeight < 0 || newHeight > 1) {
+  public setHeight(height: number) {
+    if (height < 0 || height > 1) {
       throw new Error("Layer height must be a percentage between 0 and 1");
     }
 
-    this.layerHeight = newHeight; // percentage (0-1)
+    this.height = height; // percentage (0-1)
     const actualHeight = this.getActualLayerHeight();
 
-    this.lowerClippingPlane.constant = -(
-      actualHeight -
-      this.layerThickness / 2
-    );
-    this.upperClippingPlane.constant = actualHeight + this.layerThickness / 2;
-  }
-
-  public getLayerHeight(): number {
-    return this.layerHeight;
+    this.lowerClippingPlane.constant = -(actualHeight - this.thickness / 2);
+    this.upperClippingPlane.constant = actualHeight + this.thickness / 2;
   }
 
   /**
    * Sets the layer thickness as a percentage of the GLTF model's height.
-   * @param newThickness - The new thickness as a percentage (0-1).
+   * @param thickness - The new thickness as a percentage (0-1).
    * @throws Will throw an error if the new thickness is not between 0 and 1.
    */
-  public setLayerThickness(newThickness: number) {
-    if (newThickness <= 0 || newThickness > 1) {
+  public setThickness(thickness: number) {
+    if (thickness <= 0 || thickness > 1) {
       throw new Error("Layer thickness must be a percentage between 0 and 1");
     }
-    this.layerThickness = newThickness;
+    this.thickness = thickness;
 
     // Calculate the world thickness based on the GLTF size and the new thickness percentage
     const actualHeight = this.getActualLayerHeight();
-    const thickness = this.gltfSize.y * newThickness;
+    const worldThickness = this.gltfSize.y * thickness;
 
-    this.lowerClippingPlane.constant = -(actualHeight - thickness / 2);
-    this.upperClippingPlane.constant = actualHeight + thickness / 2;
-  }
-
-  /**
-   * Gets the layer thickness as a percentage of the GLTF model's height.
-   * @returns The layer thickness as a percentage (0-1).
-   */
-  public getLayerThickness(): number {
-    return this.layerThickness;
+    this.lowerClippingPlane.constant = -(actualHeight - worldThickness / 2);
+    this.upperClippingPlane.constant = actualHeight + worldThickness / 2;
   }
 
   /**

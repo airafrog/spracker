@@ -63,10 +63,11 @@ export const useLayerStore = defineStore("layer", () => {
     const layer = layers.value[id];
     const layerService = layerServices[id];
 
-    layerService.setLayerThickness(thickness);
+    layerService.setThickness(thickness);
 
     layer.thickness = thickness;
     layer.canvasDataUrl = layerService.render();
+    console.log(layer.canvasDataUrl);
   }
 
   function setLayerHeight(id: string, height: number) {
@@ -75,7 +76,7 @@ export const useLayerStore = defineStore("layer", () => {
     const layer = layers.value[id];
     const layerService = layerServices[id];
 
-    layerService.setLayerHeight(height);
+    layerService.setHeight(height);
 
     layer.height = height;
     layer.canvasDataUrl = layerService.render();
