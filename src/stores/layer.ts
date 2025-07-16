@@ -67,7 +67,6 @@ export const useLayerStore = defineStore("layer", () => {
 
     layer.thickness = thickness;
     layer.canvasDataUrl = layerService.render();
-    console.log(layer.canvasDataUrl);
   }
 
   function setLayerHeight(id: string, height: number) {
