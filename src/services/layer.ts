@@ -35,25 +35,34 @@ export class LayerService {
     this.setThickness(thickness);
     this.configureCamera();
 
-    // Enable clipping on all materials in the scene
-    this.gltf.scene.traverse((child) => {
+    // Clone the GLTF scene for this layer to avoid scene tree conflicts
+    const clonedScene = gltf.scene.clone();
+
+    // Enable clipping on all materials in the cloned scene
+    clonedScene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         if (Array.isArray(child.material)) {
-          child.material.forEach((material) => {
-            material.clippingPlanes = [
+          child.material = child.material.map((material) => {
+            const clonedMaterial = material.clone();
+            clonedMaterial.clippingPlanes = [
               this.lowerClippingPlane,
               this.upperClippingPlane,
             ];
+            return clonedMaterial;
           });
         } else {
-          child.material.clippingPlanes = [
+          // Clone the material to avoid conflicts between layers
+          const clonedMaterial = child.material.clone();
+          clonedMaterial.clippingPlanes = [
             this.lowerClippingPlane,
             this.upperClippingPlane,
           ];
+          child.material = clonedMaterial;
         }
       }
     });
-    this.scene.add(this.gltf.scene);
+
+    this.scene.add(clonedScene);
 
     const light = new THREE.AmbientLight(0xffffff, 1);
     this.scene.add(light);
@@ -67,6 +76,14 @@ export class LayerService {
     LayerService.camera.position.set(0, this.gltfSize.y, 0);
     LayerService.camera.lookAt(0, 0, 0);
     LayerService.camera.updateProjectionMatrix();
+  }
+
+  private updateClippingPlanes() {
+    const actualHeight = this.getActualLayerHeight();
+    const worldThickness = this.gltfSize.y * this.thickness;
+
+    this.lowerClippingPlane.constant = -(actualHeight - worldThickness / 2);
+    this.upperClippingPlane.constant = actualHeight + worldThickness / 2;
   }
 
   /**
@@ -103,12 +120,8 @@ export class LayerService {
     if (height < 0 || height > 1) {
       throw new Error("Layer height must be a percentage between 0 and 1");
     }
-
-    this.height = height; // percentage (0-1)
-    const actualHeight = this.getActualLayerHeight();
-
-    this.lowerClippingPlane.constant = -(actualHeight - this.thickness / 2);
-    this.upperClippingPlane.constant = actualHeight + this.thickness / 2;
+    this.height = height;
+    this.updateClippingPlanes();
   }
 
   /**
@@ -121,21 +134,15 @@ export class LayerService {
       throw new Error("Layer thickness must be a percentage between 0 and 1");
     }
     this.thickness = thickness;
-
-    // Calculate the world thickness based on the GLTF size and the new thickness percentage
-    const actualHeight = this.getActualLayerHeight();
-    const worldThickness = this.gltfSize.y * thickness;
-
-    this.lowerClippingPlane.constant = -(actualHeight - worldThickness / 2);
-    this.upperClippingPlane.constant = actualHeight + worldThickness / 2;
+    this.updateClippingPlanes();
   }
 
   /**
    * Disposes of the layer resources.
    */
   public dispose() {
-    this.scene.remove(this.gltf.scene);
-    this.gltf.scene.traverse((child) => {
+    // Remove and dispose of the cloned scene
+    this.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         if (Array.isArray(child.material)) {
           child.material.forEach((material) => {
@@ -146,5 +153,6 @@ export class LayerService {
         }
       }
     });
+    this.scene.clear();
   }
 }
