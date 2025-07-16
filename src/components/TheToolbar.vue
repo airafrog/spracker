@@ -22,10 +22,17 @@ onMounted(() => {
       <the-navbar />
     </div>
     <div class="col">
-      <div v-for="layerItem in layerStore.layerItems" :key="layerItem.id">
-        {{ layerItem.name }}
-      </div>
+      <q-scroll-area style="height: 100%; max-width: 100%">
+        <div v-for="layerItem in layerStore.layerItems" :key="layerItem.id">
+          {{ layerItem.name }}
+        </div>
+      </q-scroll-area>
     </div>
-    <div class="col">Tools</div>
+    <div class="col">
+      <img
+        :src="layerStore.layerItems[0].layer.canvasDataUrl"
+        alt="Layer Preview"
+      />
+    </div>
   </div>
 </template>
