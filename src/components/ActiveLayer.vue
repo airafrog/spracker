@@ -75,22 +75,28 @@ function handleNameUpdate(value: string | number | null) {
 
     <div class="col">
       <div
-        class="flex justify-center q-pa-lg full-height"
+        class="flex justify-center items-center full-height"
         :style="{ 'background-color': settingsStore.pngBackgroundHex }"
       >
-        <q-img :src="props.layer.canvasDataUrl" fit="contain" />
-        <q-btn
-          icon="fas fa-fill-drip"
-          size="small"
-          color="primary"
-          style="position: absolute; left: 0.5em; bottom: 0.5em"
-          round
-        >
-          <q-popup-proxy>
-            <q-color v-model="settingsStore.pngBackgroundHex" />
-          </q-popup-proxy>
-        </q-btn>
+        <div class="full-width full-height q-pa-lg">
+          <img
+            :src="props.layer.canvasDataUrl"
+            style="width: 100%; height: 100%; object-fit: contain"
+          />
+        </div>
       </div>
+
+      <q-btn
+        icon="fas fa-fill-drip"
+        size="small"
+        color="primary"
+        style="position: absolute; left: 0.5em; bottom: 0.5em"
+        round
+      >
+        <q-popup-proxy>
+          <q-color v-model="settingsStore.pngBackgroundHex" />
+        </q-popup-proxy>
+      </q-btn>
     </div>
   </div>
 </template>
