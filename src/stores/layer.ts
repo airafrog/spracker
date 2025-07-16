@@ -58,8 +58,10 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerThickness(id: string, thickness: number) {
+    if (thickness <= 0 || thickness > 1) return;
     if (!(id in layers.value)) return;
     if (!(id in layerServices)) return;
+
     const layer = layers.value[id];
     const layerService = layerServices[id];
 
@@ -70,8 +72,10 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerHeight(id: string, height: number) {
+    if (height < 0 || height > 1) return;
     if (!(id in layers.value)) return;
     if (!(id in layerServices)) return;
+
     const layer = layers.value[id];
     const layerService = layerServices[id];
 

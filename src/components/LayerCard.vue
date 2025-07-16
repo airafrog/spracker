@@ -42,6 +42,8 @@ function handleHeightUpdate(value: number | string | null) {
           :model-value="props.layer.height"
           type="number"
           step="0.01"
+          min="0"
+          max="1"
           label="Height"
           dense
           filled
@@ -53,6 +55,8 @@ function handleHeightUpdate(value: number | string | null) {
           :model-value="props.layer.thickness"
           type="number"
           step="0.01"
+          min="0"
+          max="1"
           label="Thickness"
           dense
           filled
