@@ -34,9 +34,10 @@ function handleHeightUpdate(value: number | string | null) {
 <template>
   <div :class="{ active: isActive }" class="layer-card">
     <div class="row q-col-gutter-x-sm">
-      <div class="col">
-        <q-input :model-value="props.layer.name" dense filled />
+      <div class="col column justify-center">
+        <span>{{ props.layer.name }}</span>
       </div>
+
       <div class="col">
         <q-input
           :model-value="props.layer.height"
@@ -50,6 +51,7 @@ function handleHeightUpdate(value: number | string | null) {
           @update:model-value="handleHeightUpdate"
         />
       </div>
+
       <div class="col">
         <q-input
           :model-value="props.layer.thickness"

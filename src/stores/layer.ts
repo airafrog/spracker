@@ -85,13 +85,19 @@ export const useLayerStore = defineStore("layer", () => {
     layer.canvasDataUrl = layerService.render();
   }
 
+  function setLayerName(id: string, name: string) {
+    if (!(id in layers.value)) return;
+    layers.value[id].name = name;
+  }
+
   return {
     activeLayer,
     addEvenlySpacedLayers,
     addLayer,
+    setLayerHeight,
+    setLayerName,
     getLayerService,
     setLayerThickness,
-    setLayerHeight,
     layers,
     removeAllLayers,
     removeLayer,
