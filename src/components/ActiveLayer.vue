@@ -9,7 +9,7 @@ const props = defineProps<{
 }>();
 
 const layerStore = useLayerStore();
-const hex = ref("#f0f0f0");
+const hex = ref("#23343d");
 
 function handleThicknessUpdate(value: number | string | null) {
   if (value === null) return;
