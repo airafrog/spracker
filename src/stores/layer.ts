@@ -32,7 +32,7 @@ export const useLayerStore = defineStore("layer", () => {
     layerItems.value = []; // Clear existing layers
     const layerSeparation = 1 / layerCount;
     for (let i = 1; i <= layerCount; i++) {
-      addLayer(gltf, layerSeparation * i, layerSeparation);
+      addLayer(gltf, layerSeparation * i, layerSeparation * 2);
     }
   }
 

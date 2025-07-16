@@ -23,6 +23,7 @@ function formatPercentage(value: number): string {
 <template>
   <div :class="{ active: isActive }" class="layer-card flex justify-between">
     <div>{{ props.layerItem.name }}</div>
+    <div>{{ formatPercentage(props.layerItem.layerThickness) }}</div>
     <div>{{ formatPercentage(props.layerItem.layerHeight) }}</div>
   </div>
 </template>
