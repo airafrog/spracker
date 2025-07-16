@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { LayerItem } from "../types";
+import type { Layer } from "../types";
 
 const props = defineProps<{
-  layerItem: LayerItem;
+  layer: Layer;
 }>();
 </script>
 
 <template>
   <q-toolbar class="bg-primary">
-    <q-toolbar-title>{{ props.layerItem.name }}</q-toolbar-title>
+    <q-toolbar-title>{{ props.layer.name }}</q-toolbar-title>
   </q-toolbar>
   <div>
-    <img :src="props.layerItem.layer.canvasDataUrl" style="width: 100%" />
+    <img :src="props.layer.canvasDataUrl" style="width: 100%" />
   </div>
 </template>

@@ -42,10 +42,12 @@ onMounted(() => {
   scene.add(light);
 
   // Make a plane for each layer
-  const layerCount = layerStore.layerItems.length;
-  layerStore.layerItems.forEach((layerItem, i) => {
-    const { layer } = layerItem;
-    const separation = layer.gltfSize.y / layerCount;
+  const layerValues = Object.values(layerStore.layers);
+  layerValues.forEach((layer, i) => {
+    const layerService = layerStore.getLayerService(layer.id);
+    if (!layerService) return;
+
+    const separation = layerService.gltfSize.y / layerValues.length;
 
     const textureLoader = new THREE.TextureLoader();
     const texture = textureLoader.load(layer.canvasDataUrl, (texture) => {
@@ -53,7 +55,7 @@ onMounted(() => {
     });
 
     const layerMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(layer.gltfSize.x, layer.gltfSize.z),
+      new THREE.PlaneGeometry(layerService.gltfSize.x, layerService.gltfSize.z),
       new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,

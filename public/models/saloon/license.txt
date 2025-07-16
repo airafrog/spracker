@@ -1,0 +1,11 @@
+Model Information:
+* title:	Saloon
+* source:	https://sketchfab.com/3d-models/saloon-2892891261a845048428d126bc865db1
+* author:	dddzzz (https://sketchfab.com/dddzzz)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Saloon" (https://sketchfab.com/3d-models/saloon-2892891261a845048428d126bc865db1) by dddzzz (https://sketchfab.com/dddzzz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

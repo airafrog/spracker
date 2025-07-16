@@ -1,30 +1,65 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useLayerStore } from "../stores";
-import type { LayerItem } from "../types";
+import type { Layer } from "../types";
 
 const props = defineProps<{
-  layerItem: LayerItem;
+  layer: Layer;
 }>();
 
 const layerStore = useLayerStore();
 
 const isActive = computed(() => {
-  const activeLayerItem = layerStore.getActiveLayerItem();
-  if (!activeLayerItem) return false;
-  return props.layerItem.id === activeLayerItem.id;
+  if (!layerStore.activeLayer) return false;
+  return props.layer.id === layerStore.activeLayer.id;
 });
 
-function formatPercentage(value: number): string {
-  return `${(value * 100).toFixed(2)}%`;
+// function formatPercentage(value: number): string {
+//   return `${(value * 100).toFixed(2)}%`;
+// }
+
+function handleThicknessUpdate(value: number | string | null) {
+  if (value === null) return;
+  if (typeof value === "string") value = parseFloat(value);
+  layerStore.setLayerThickness(props.layer.id, value);
+}
+
+function handleHeightUpdate(value: number | string | null) {
+  if (value === null) return;
+  if (typeof value === "string") value = parseFloat(value);
+  layerStore.setLayerHeight(props.layer.id, value);
 }
 </script>
 
 <template>
-  <div :class="{ active: isActive }" class="layer-card flex justify-between">
-    <div>{{ props.layerItem.name }}</div>
-    <div>{{ formatPercentage(props.layerItem.layerThickness) }}</div>
-    <div>{{ formatPercentage(props.layerItem.layerHeight) }}</div>
+  <div :class="{ active: isActive }" class="layer-card">
+    <div class="row q-col-gutter-x-sm">
+      <div class="col">
+        <q-input :model-value="props.layer.name" dense filled />
+      </div>
+      <div class="col">
+        <q-input
+          :model-value="props.layer.height"
+          type="number"
+          step="0.01"
+          label="Height"
+          dense
+          filled
+          @update:model-value="handleHeightUpdate"
+        />
+      </div>
+      <div class="col">
+        <q-input
+          :model-value="props.layer.thickness"
+          type="number"
+          step="0.01"
+          label="Thickness"
+          dense
+          filled
+          @update:model-value="handleThicknessUpdate"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

@@ -14,7 +14,7 @@ const props = defineProps<{
 const layerStore = useLayerStore();
 
 onMounted(() => {
-  layerStore.addEvenlySpacedLayers(props.gltf, 30);
+  layerStore.addEvenlySpacedLayers(props.gltf, 20, 0.1);
 });
 </script>
 
@@ -28,17 +28,17 @@ onMounted(() => {
       <q-scroll-area style="height: 100%; max-width: 100%">
         <div class="q-gutter-y-sm q-pa-md">
           <layer-card
-            v-for="layerItem in layerStore.layerItems"
-            :key="layerItem.id"
-            :layerItem="layerItem"
-            @click="layerStore.setActiveLayerItem(layerItem.id)"
+            v-for="layer in layerStore.layers"
+            :key="layer.id"
+            :layer="layer"
+            @click="layerStore.activeLayer = layer"
           />
         </div>
       </q-scroll-area>
     </div>
 
-    <div v-if="layerStore.activeLayerItem" class="col">
-      <active-layer :layerItem="layerStore.activeLayerItem" />
+    <div v-if="layerStore.activeLayer" class="col">
+      <active-layer :layer="layerStore.activeLayer" />
     </div>
   </div>
 </template>

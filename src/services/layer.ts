@@ -11,7 +11,6 @@ export class LayerService {
   private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
   private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
   protected static canvas = document.createElement("canvas");
-  public canvasDataUrl = LayerService.canvas.toDataURL();
 
   private static camera = new THREE.OrthographicCamera();
   static {
@@ -58,8 +57,6 @@ export class LayerService {
 
     const light = new THREE.AmbientLight(0xffffff, 1);
     this.scene.add(light);
-
-    this.render();
   }
 
   private configureCamera() {
@@ -94,7 +91,7 @@ export class LayerService {
 
     // Render the scene once and store the canvas data URL. The canvas will be reused for other layers
     LayerService.renderer.render(this.scene, LayerService.camera);
-    this.canvasDataUrl = LayerService.canvas.toDataURL();
+    return LayerService.canvas.toDataURL();
   }
 
   /**

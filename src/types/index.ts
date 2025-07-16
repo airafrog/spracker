@@ -1,9 +1,7 @@
-import type { LayerService } from "../services/layer";
-
-export type LayerItem = {
+export type Layer = {
+  canvasDataUrl: string;
   id: string;
-  layer: LayerService;
-  layerHeight: number;
-  layerThickness: number;
+  height: number;
+  thickness: number;
   name: string;
 };

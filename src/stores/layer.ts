@@ -1,81 +1,94 @@
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { computed, ref, shallowRef } from "vue";
+import { ref } from "vue";
 
-import type { LayerItem } from "../types";
+import type { Layer } from "../types";
 import { LayerService } from "../services/layer";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 
 export const useLayerStore = defineStore("layer", () => {
-  const layerItems = shallowRef<LayerItem[]>([]);
+  const layers = ref<{ [id: string]: Layer }>({});
+  const activeLayer = ref<Layer | null>(null);
+  const layerServices: { [id: string]: LayerService } = {};
 
-  const activeLayerItemId = ref<string>();
-  const activeLayerItem = computed(() => {
-    if (!activeLayerItemId.value) return null;
-    return layerItems.value.find((item) => item.id === activeLayerItemId.value);
-  });
-
-  function addLayer(gltf: GLTF, layerHeight = 0, layerThickness = 1) {
+  function addLayer(gltf: GLTF, height = 0, thickness = 1) {
     const id = uuidv4();
-    const layer = new LayerService(gltf, layerHeight, layerThickness);
+    const layerService = new LayerService(gltf, height, thickness);
 
-    layerItems.value.push({
+    layerServices[id] = layerService;
+
+    layers.value[id] = {
+      canvasDataUrl: layerService.render(),
       id,
-      layerHeight,
-      layerThickness,
-      name: `Layer ${layerItems.value.length + 1}`,
-      layer,
-    });
+      height,
+      thickness,
+      name: `Layer ${Object.keys(layers.value).length + 1}`,
+    };
   }
 
-  function addEvenlySpacedLayers(gltf: GLTF, layerCount: number) {
-    layerItems.value = []; // Clear existing layers
-    const layerSeparation = 1 / layerCount;
-    for (let i = 1; i <= layerCount; i++) {
-      addLayer(gltf, layerSeparation * i, layerSeparation * 2);
+  function addEvenlySpacedLayers(
+    gltf: GLTF,
+    layerCount: number,
+    layerThickness: number
+  ) {
+    const layerHeight = 1 / layerCount;
+    for (let i = 0; i < layerCount; i++) {
+      addLayer(gltf, layerHeight * i, layerThickness);
     }
   }
 
-  function removeLayer(id: string) {
-    const index = layerItems.value.findIndex(
-      (layerItem) => layerItem.id === id
-    );
-    if (index === -1) return;
+  function getLayerService(id: string): LayerService | null {
+    if (!(id in layerServices)) return null;
+    return layerServices[id];
+  }
 
-    layerItems.value[index].layer.dispose();
-    layerItems.value.splice(index, 1);
+  function removeLayer(id: string) {
+    if (!(id in layers.value)) return;
+    if (!(id in layerServices)) return;
+
+    layerServices[id].dispose();
+
+    delete layers.value[id];
+    delete layerServices[id];
   }
 
   function removeAllLayers() {
-    layerItems.value.forEach((layerItem) => layerItem.layer.dispose());
-    layerItems.value = [];
+    const ids = Object.keys(layers.value);
+    ids.forEach((id) => removeLayer(id));
   }
 
-  function setAllLayerThickness(thickness: number) {
-    layerItems.value.forEach((layerItem) => {
-      layerItem.layerThickness = thickness;
-      layerItem.layer.setLayerThickness(thickness);
-    });
+  function setLayerThickness(id: string, thickness: number) {
+    if (!(id in layers.value)) return;
+    if (!(id in layerServices)) return;
+    const layer = layers.value[id];
+    const layerService = layerServices[id];
+
+    layerService.setLayerThickness(thickness);
+
+    layer.thickness = thickness;
+    layer.canvasDataUrl = layerService.render();
   }
 
-  function setActiveLayerItem(id: string) {
-    const layerItem = layerItems.value.find((item) => item.id === id);
-    if (!layerItem) throw new Error(`Layer with id "${id}" not found`);
-    activeLayerItemId.value = id;
-  }
+  function setLayerHeight(id: string, height: number) {
+    if (!(id in layers.value)) return;
+    if (!(id in layerServices)) return;
+    const layer = layers.value[id];
+    const layerService = layerServices[id];
 
-  function getActiveLayerItem() {
-    return activeLayerItem.value;
+    layerService.setLayerHeight(height);
+
+    layer.height = height;
+    layer.canvasDataUrl = layerService.render();
   }
 
   return {
-    activeLayerItem,
+    activeLayer,
     addEvenlySpacedLayers,
     addLayer,
-    getActiveLayerItem,
-    layerItems,
-    setActiveLayerItem,
-    setAllLayerThickness,
+    getLayerService,
+    setLayerThickness,
+    setLayerHeight,
+    layers,
     removeAllLayers,
     removeLayer,
   };
