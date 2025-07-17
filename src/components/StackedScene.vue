@@ -51,19 +51,7 @@ onMounted(() => {
 
     const separation = layerService.gltfSize.y / layerValues.length;
 
-    const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(layer.canvasDataUrl, (texture) => {
-      texture.needsUpdate = true;
-    });
-
-    const layerMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(layerService.gltfSize.x, layerService.gltfSize.z),
-      new THREE.MeshBasicMaterial({
-        map: texture,
-        transparent: true,
-        side: THREE.DoubleSide,
-      })
-    );
+    const layerMesh = layerService.getMesh();
     layerMesh.position.set(0, separation * i, 0);
     layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
     scene.add(layerMesh);

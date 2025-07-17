@@ -1,15 +1,17 @@
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 
+import { textureLoader } from "./texture";
+
 export class LayerService {
   private scene = new THREE.Scene();
-  private gltf: GLTF;
   private gltfBox = new THREE.Box3();
   public gltfSize = new THREE.Vector3();
   private thickness = 0;
   private height = 0;
   private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
   private upperClippingPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0));
+  private mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
   protected static canvas = document.createElement("canvas");
 
   private static camera = new THREE.OrthographicCamera();
@@ -28,14 +30,28 @@ export class LayerService {
   }
 
   constructor(gltf: GLTF, layerHeight: number, thickness: number) {
-    this.gltf = gltf;
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
     this.setHeight(layerHeight);
     this.setThickness(thickness);
     this.configureCamera();
 
-    // Clone the GLTF scene for this layer to avoid scene tree conflicts
+    this.mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(this.gltfSize.x, this.gltfSize.z, 1, 1),
+      new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        transparent: true,
+      })
+    );
+
+    const clonedScene = this.prepareGltfScene(gltf);
+    this.scene.add(clonedScene);
+
+    const light = new THREE.AmbientLight(0xffffff, 1);
+    this.scene.add(light);
+  }
+
+  private prepareGltfScene(gltf: GLTF) {
     const clonedScene = gltf.scene.clone();
 
     // Enable clipping on all materials in the cloned scene
@@ -62,10 +78,7 @@ export class LayerService {
       }
     });
 
-    this.scene.add(clonedScene);
-
-    const light = new THREE.AmbientLight(0xffffff, 1);
-    this.scene.add(light);
+    return clonedScene;
   }
 
   private configureCamera() {
@@ -95,8 +108,20 @@ export class LayerService {
     return this.gltfBox.min.y + this.height * this.gltfSize.y;
   }
 
+  /**
+   * Gets the thickness of the layer in world coordinates.
+   * @returns The thickness of the layer in world coordinates.
+   */
   public getWorldThickness(): number {
     return this.thickness * this.gltfSize.y;
+  }
+
+  /**
+   * Gets the mesh representing the layer.
+   * @returns The mesh of the layer.
+   */
+  public getMesh(): THREE.Mesh {
+    return this.mesh;
   }
 
   /**
@@ -112,7 +137,14 @@ export class LayerService {
 
     // Render the scene once and store the canvas data URL. The canvas will be reused for other layers
     LayerService.renderer.render(this.scene, LayerService.camera);
-    return LayerService.canvas.toDataURL();
+    const canvasDataUrl = LayerService.canvas.toDataURL();
+
+    // Load the texture from the canvas data URL and apply it to the mesh
+    const texture = textureLoader.load(canvasDataUrl);
+    this.mesh.material.map = texture;
+    this.mesh.material.needsUpdate = true;
+
+    return canvasDataUrl;
   }
 
   /**
