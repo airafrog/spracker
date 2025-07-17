@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
+import SceneToolbar from "./SceneToolbar.vue";
 import { CameraService } from "../services/camera";
-import { useLayerStore } from "../stores";
-import { storeToRefs } from "pinia";
+import { useLayerStore, useSettingsStore } from "../stores";
 
 const props = defineProps<{
   gltf: GLTF;
 }>();
+
+const settingsStore = useSettingsStore();
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
@@ -61,6 +64,14 @@ onMounted(() => {
     cameraService.resize(canvasWidth, canvasHeight);
   };
   window.addEventListener("resize", resizeFunction);
+
+  watch(
+    () => settingsStore.originalSceneBackgroundHex,
+    (newColor) => {
+      scene.background = new THREE.Color(newColor);
+    },
+    { immediate: true }
+  );
 });
 
 onUnmounted(() => {
@@ -101,12 +112,12 @@ watch(
 
 <template>
   <div class="full-height" style="position: relative">
-    <q-btn
-      :label="cameraService.getCameraMode().value === 'perspective' ? 'p' : 'o'"
-      class="camera-mode-btn"
-      no-caps
-      @click="cameraService.toggleCameraMode()"
+    <scene-toolbar
+      v-model:background-hex="settingsStore.originalSceneBackgroundHex"
+      :camera-mode="cameraService.getCameraMode().value"
+      @toggle-camera-mode="cameraService.toggleCameraMode()"
     />
+
     <div ref="canvasContainer" class="canvas-container">
       <canvas ref="canvas" />
     </div>
@@ -114,14 +125,6 @@ watch(
 </template>
 
 <style scoped>
-.camera-mode-btn {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  z-index: 999;
-  color: white;
-}
-
 .canvas-container {
   width: 100%;
   height: 100%;

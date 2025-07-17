@@ -1,20 +1,22 @@
 import { defineStore } from "pinia";
+import * as THREE from "three";
+import type { GLTF } from "three/examples/jsm/Addons.js";
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
 
-import type { Layer } from "../types";
 import { LayerService } from "../services/layer";
-import type { GLTF } from "three/examples/jsm/Addons.js";
+import type { Layer } from "../types";
 
 export const useLayerStore = defineStore("layer", () => {
   const layers = ref<{ [id: string]: Layer }>({});
   const activeLayer = ref<Layer | null>(null);
   const layerServices: { [id: string]: LayerService } = {};
+  const layerPlanes: { [id: string]: THREE.Mesh } = {};
 
   function addLayer(gltf: GLTF, height = 0, thickness = 1) {
     const id = uuidv4();
-    const layerService = new LayerService(gltf, height, thickness);
 
+    const layerService = new LayerService(gltf, height, thickness);
     layerServices[id] = layerService;
 
     layers.value[id] = {
