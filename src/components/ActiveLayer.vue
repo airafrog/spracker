@@ -88,10 +88,8 @@ function handleNameUpdate(value: string | number | null) {
 
       <q-btn
         icon="fas fa-fill-drip"
-        size="small"
         color="primary"
-        style="position: absolute; left: 0.5em; bottom: 0.5em"
-        round
+        style="position: absolute; left: 0; bottom: 0"
       >
         <q-popup-proxy>
           <q-color v-model="settingsStore.pngBackgroundHex" />
