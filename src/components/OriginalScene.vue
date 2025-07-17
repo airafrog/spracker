@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import { CameraService } from "../services/camera";
+import { useLayerStore } from "../stores";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
   gltf: GLTF;
@@ -14,6 +16,12 @@ const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
 let renderer: THREE.WebGLRenderer;
+
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geo = new THREE.EdgesGeometry(geometry);
+const mat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 });
+const layerWireframe = new THREE.LineSegments(geo, mat);
+
 let resizeFunction = () => {};
 
 onMounted(() => {
@@ -42,8 +50,8 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 1);
   scene.add(light);
-
   scene.add(props.gltf.scene);
+  scene.add(layerWireframe);
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
@@ -60,6 +68,35 @@ onUnmounted(() => {
   if (renderer) renderer.dispose();
   window.removeEventListener("resize", resizeFunction);
 });
+
+const layerStore = useLayerStore();
+const { activeLayer } = storeToRefs(layerStore);
+watch(
+  activeLayer,
+  (newLayer) => {
+    if (!newLayer) {
+      layerWireframe.visible = false;
+      return;
+    }
+    layerWireframe.visible = true;
+
+    const layerService = layerStore.getLayerService(newLayer.id);
+    if (!layerService) return;
+    const height = layerService.getWorldHeight();
+    const thickness = layerService.getWorldThickness();
+
+    layerWireframe.position.y = height;
+    layerWireframe.scale.set(
+      layerService.gltfSize.x,
+      thickness,
+      layerService.gltfSize.z
+    );
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
 </script>
 
 <template>

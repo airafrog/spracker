@@ -79,8 +79,8 @@ export class LayerService {
   }
 
   private updateClippingPlanes() {
-    const actualHeight = this.getActualLayerHeight();
-    const worldThickness = this.gltfSize.y * this.thickness;
+    const actualHeight = this.getWorldHeight();
+    const worldThickness = this.getWorldThickness();
 
     this.lowerClippingPlane.constant = -(actualHeight - worldThickness / 2);
     this.upperClippingPlane.constant = actualHeight + worldThickness / 2;
@@ -91,8 +91,12 @@ export class LayerService {
    * This is calculated as the minimum y-coordinate of the GLTF model plus the layer height
    * multiplied by the GLTF model's height.
    */
-  public getActualLayerHeight(): number {
+  public getWorldHeight(): number {
     return this.gltfBox.min.y + this.height * this.gltfSize.y;
+  }
+
+  public getWorldThickness(): number {
+    return this.thickness * this.gltfSize.y;
   }
 
   /**
