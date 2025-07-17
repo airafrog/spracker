@@ -21,7 +21,7 @@ onMounted(() => {
 <template>
   <div class="column full-height">
     <div class="col">
-      <layer-list />
+      <layer-list :gltf="props.gltf" />
     </div>
 
     <div v-if="layerStore.activeLayer" class="col-7">

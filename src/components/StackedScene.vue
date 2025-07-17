@@ -40,7 +40,7 @@ onMounted(() => {
     renderer.render(scene, cameraService.camera);
   }
 
-  const light = new THREE.AmbientLight(0xffffff, 1);
+  const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
 
   // Make a plane for each layer

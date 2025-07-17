@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dialog } from "quasar";
 import { useLayerStore, useSettingsStore } from "../stores";
 import type { Layer } from "../types";
 
@@ -26,6 +27,27 @@ function handleNameUpdate(value: string | number | null) {
   if (typeof value === "number") value = String(value);
   layerStore.setLayerName(props.layer.id, value);
 }
+
+function showDeleteDialog() {
+  Dialog.create({
+    title: "Delete Layer",
+    message: `Are you sure you want to delete layer "${props.layer.name}"?`,
+    persistent: true,
+    class: "bg-primary",
+    cancel: {
+      push: true,
+      color: "secondary",
+      label: "Cancel",
+    },
+    ok: {
+      push: true,
+      color: "negative",
+      label: "Delete",
+    },
+  }).onOk(() => {
+    layerStore.removeLayer(props.layer.id);
+  });
+}
 </script>
 
 <template>
@@ -41,6 +63,7 @@ function handleNameUpdate(value: string | number | null) {
           @update:model-value="handleNameUpdate"
         />
 
+        <q-btn icon="fas fa-trash" flat @click="showDeleteDialog" />
         <q-btn
           icon="fas fa-close"
           flat

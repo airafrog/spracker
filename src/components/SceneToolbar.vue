@@ -11,7 +11,7 @@ const backgroundHex = defineModel<string>("backgroundHex", { required: true });
 </script>
 
 <template>
-  <div class="toolbar-container">
+  <div class="toolbar-container full-width flex justify-end">
     <q-btn
       :label="props.cameraMode === 'perspective' ? 'p' : 'o'"
       icon="fas fa-video"
@@ -31,6 +31,7 @@ const backgroundHex = defineModel<string>("backgroundHex", { required: true });
   position: absolute;
   top: 0;
   left: 0;
+
   z-index: 999;
 }
 </style>
