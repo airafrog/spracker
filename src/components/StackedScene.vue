@@ -10,11 +10,37 @@ const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
+const stackGroup = new THREE.Group();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
 const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
+
+function createStack() {
+  const layerValues = Object.values(layerStore.layers);
+
+  layerValues.forEach((layer, i) => {
+    const layerService = layerStore.getLayerService(layer.id);
+    if (!layerService) return;
+
+    const separation = layerService.gltfSize.y / layerValues.length;
+
+    const layerMesh = layerService.getMesh();
+    layerMesh.position.set(0, separation * i, 0);
+    layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
+    stackGroup.add(layerMesh);
+  });
+}
+
+watch(
+  layerStore.layers,
+  () => {
+    stackGroup.clear();
+    createStack();
+  },
+  { immediate: true, deep: true }
+);
 
 onMounted(() => {
   if (!canvas.value) throw new Error("Canvas is not defined");
@@ -29,11 +55,10 @@ onMounted(() => {
   );
   renderer.setAnimationLoop(animate);
 
-  cameraService.enableOrbitControls(canvas.value);
-
   const canvasWidth = canvasContainer.value.clientWidth;
   const canvasHeight = canvasContainer.value.clientHeight;
   cameraService.resize(canvasWidth, canvasHeight);
+  cameraService.enableOrbitControls(canvas.value);
 
   function animate() {
     cameraService.animate();
@@ -42,20 +67,7 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
-
-  // Make a plane for each layer
-  const layerValues = Object.values(layerStore.layers);
-  layerValues.forEach((layer, i) => {
-    const layerService = layerStore.getLayerService(layer.id);
-    if (!layerService) return;
-
-    const separation = layerService.gltfSize.y / layerValues.length;
-
-    const layerMesh = layerService.getMesh();
-    layerMesh.position.set(0, separation * i, 0);
-    layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
-    scene.add(layerMesh);
-  });
+  scene.add(stackGroup);
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;

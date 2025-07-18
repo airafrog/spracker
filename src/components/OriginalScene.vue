@@ -40,11 +40,10 @@ onMounted(() => {
   );
   renderer.setAnimationLoop(animate);
 
-  cameraService.enableOrbitControls(canvas.value);
-
   const canvasWidth = canvasContainer.value.clientWidth;
   const canvasHeight = canvasContainer.value.clientHeight;
   cameraService.resize(canvasWidth, canvasHeight);
+  cameraService.enableOrbitControls(canvas.value);
 
   function animate() {
     cameraService.animate();
