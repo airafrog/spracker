@@ -19,13 +19,15 @@ const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
 let renderer: THREE.WebGLRenderer;
-
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const geo = new THREE.EdgesGeometry(geometry);
-const mat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 });
-const layerWireframe = new THREE.LineSegments(geo, mat);
-
 let resizeFunction = () => {};
+
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const edgesGeometry = new THREE.EdgesGeometry(boxGeometry);
+const lineMaterial = new THREE.LineBasicMaterial({
+  color: 0xffffff,
+  linewidth: 1,
+});
+const layerWireframe = new THREE.LineSegments(edgesGeometry, lineMaterial);
 
 onMounted(() => {
   if (!canvas.value) throw new Error("Canvas is not defined");
@@ -45,15 +47,15 @@ onMounted(() => {
   cameraService.resize(canvasWidth, canvasHeight);
   cameraService.enableOrbitControls(canvas.value);
 
-  function animate() {
-    cameraService.animate();
-    renderer.render(scene, cameraService.camera);
-  }
-
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
   scene.add(props.gltf.scene);
   scene.add(layerWireframe);
+
+  function animate() {
+    cameraService.animate();
+    renderer.render(scene, cameraService.camera);
+  }
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
@@ -66,9 +68,7 @@ onMounted(() => {
 
   watch(
     () => settingsStore.originalSceneBackgroundHex,
-    (newColor) => {
-      scene.background = new THREE.Color(newColor);
-    },
+    (newColor) => (scene.background = new THREE.Color(newColor)),
     { immediate: true }
   );
 });

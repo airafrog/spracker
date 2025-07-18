@@ -6,6 +6,9 @@ import SceneToolbar from "./SceneToolbar.vue";
 import { CameraService } from "../services/camera";
 import { useLayerStore, useSettingsStore } from "../stores";
 
+const layerStore = useLayerStore();
+const settingsStore = useSettingsStore();
+
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
@@ -14,16 +17,12 @@ const stackGroup = new THREE.Group();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
-const layerStore = useLayerStore();
-const settingsStore = useSettingsStore();
-
 function createStack() {
   const layerValues = Object.values(layerStore.layers);
 
   layerValues.forEach((layer, i) => {
     const layerService = layerStore.getLayerService(layer.id);
     if (!layerService) return;
-
     const separation = layerService.gltfSize.y / layerValues.length;
 
     const layerMesh = layerService.getMesh();
@@ -32,14 +31,13 @@ function createStack() {
     stackGroup.add(layerMesh);
   });
 }
-
 watch(
-  layerStore.layers,
+  () => Object.keys(layerStore.layers), // "hack" to watch for shallow changes
   () => {
     stackGroup.clear();
     createStack();
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 );
 
 onMounted(() => {
@@ -60,14 +58,14 @@ onMounted(() => {
   cameraService.resize(canvasWidth, canvasHeight);
   cameraService.enableOrbitControls(canvas.value);
 
+  const light = new THREE.AmbientLight(0xffffff, 2);
+  scene.add(light);
+  scene.add(stackGroup);
+
   function animate() {
     cameraService.animate();
     renderer.render(scene, cameraService.camera);
   }
-
-  const light = new THREE.AmbientLight(0xffffff, 2);
-  scene.add(light);
-  scene.add(stackGroup);
 
   resizeFunction = () => {
     if (!canvasContainer.value) return;
@@ -80,9 +78,7 @@ onMounted(() => {
 
   watch(
     () => settingsStore.stackedSceneBackgroundHex,
-    (newColor) => {
-      scene.background = new THREE.Color(newColor);
-    },
+    (newColor) => (scene.background = new THREE.Color(newColor)),
     { immediate: true }
   );
 });
