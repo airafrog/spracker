@@ -7,7 +7,7 @@ import { LayerService } from "../services/layer";
 import type { Layer } from "../types";
 
 export const useLayerStore = defineStore("layer", () => {
-  const layers = ref<{ [id: string]: Layer }>({});
+  const layers = ref<Layer[]>([]);
   const activeLayer = ref<Layer | null>(null);
   const layerServices: { [id: string]: LayerService } = {};
 
@@ -17,13 +17,13 @@ export const useLayerStore = defineStore("layer", () => {
     const layerService = new LayerService(gltf, height, thickness);
     layerServices[id] = layerService;
 
-    layers.value[id] = {
+    layers.value.push({
       canvasDataUrl: layerService.render(),
       id,
       height,
       thickness,
-      name: `Layer ${Object.keys(layers.value).length}`,
-    };
+      name: `Layer ${layers.value.length}`,
+    });
   }
 
   function addEvenlySpacedLayers(
@@ -48,20 +48,21 @@ export const useLayerStore = defineStore("layer", () => {
     if (!(id in layerServices)) return;
 
     layerServices[id].dispose();
-
-    delete layers.value[id];
     delete layerServices[id];
+
+    const layerIndex = layers.value.findIndex((layer) => layer.id === id);
+    if (layerIndex !== -1) layers.value.splice(layerIndex, 1);
   }
 
   function removeAllLayers() {
-    const ids = Object.keys(layers.value);
-    ids.forEach((id) => removeLayer(id));
+    layers.value.forEach((layer) => removeLayer(layer.id));
   }
 
   function setLayerThickness(id: string, thickness: number) {
-    if (!(id in layers.value)) return;
+    const layer = layers.value.find((layer) => layer.id === id);
+    if (!layer) return;
+
     if (!(id in layerServices)) return;
-    const layer = layers.value[id];
     const layerService = layerServices[id];
 
     layerService.setThickness(thickness);
@@ -71,9 +72,10 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerHeight(id: string, height: number) {
-    if (!(id in layers.value)) return;
+    const layer = layers.value.find((layer) => layer.id === id);
+    if (!layer) return;
+
     if (!(id in layerServices)) return;
-    const layer = layers.value[id];
     const layerService = layerServices[id];
 
     layerService.setHeight(height);
@@ -83,8 +85,9 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerName(id: string, name: string) {
-    if (!(id in layers.value)) return;
-    layers.value[id].name = name;
+    const layer = layers.value.find((layer) => layer.id === id);
+    if (!layer) return;
+    layer.name = name;
   }
 
   return {
