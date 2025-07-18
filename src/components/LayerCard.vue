@@ -14,19 +14,17 @@ const isActive = computed(() => {
   return props.layer.id === layerStore.activeLayer.id;
 });
 
-// function formatPercentage(value: number): string {
-//   return `${(value * 100).toFixed(2)}%`;
-// }
-
 function handleThicknessUpdate(value: number | string | null) {
   if (value === null) return;
   if (typeof value === "string") value = parseFloat(value);
+  if (value < 1 || value > 100) return;
   layerStore.setLayerThickness(props.layer.id, value);
 }
 
 function handleHeightUpdate(value: number | string | null) {
   if (value === null) return;
   if (typeof value === "string") value = parseFloat(value);
+  if (value < 0 || value > 100) return;
   layerStore.setLayerHeight(props.layer.id, value);
 }
 </script>
@@ -38,28 +36,30 @@ function handleHeightUpdate(value: number | string | null) {
         <span>{{ props.layer.name }}</span>
       </div>
 
-      <div class="col">
+      <div class="col-3">
         <q-input
           :model-value="props.layer.height"
           type="number"
-          step="0.01"
+          step="1"
           min="0"
-          max="1"
+          max="100"
           label="Height"
+          suffix="%"
           dense
           filled
           @update:model-value="handleHeightUpdate"
         />
       </div>
 
-      <div class="col">
+      <div class="col-3">
         <q-input
           :model-value="props.layer.thickness"
           type="number"
-          step="0.01"
-          min="0"
-          max="1"
+          step="1"
+          min="1"
+          max="100"
           label="Thickness"
+          suffix="%"
           dense
           filled
           @update:model-value="handleThicknessUpdate"

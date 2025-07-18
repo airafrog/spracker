@@ -75,10 +75,10 @@ function showDeleteDialog() {
         <label>Height:</label>
         <q-slider
           :model-value="props.layer.height"
-          :step="0.01"
+          :step="1"
           :min="0"
-          :max="1"
-          :label-value="`${(props.layer.height * 100).toFixed(0)}%`"
+          :max="100"
+          :label-value="`${props.layer.height}%`"
           label
           @update:model-value="handleHeightUpdate"
         />
@@ -86,10 +86,10 @@ function showDeleteDialog() {
         <label>Thickness:</label>
         <q-slider
           :model-value="props.layer.thickness"
-          :step="0.01"
-          :min="0"
-          :max="1"
-          :label-value="`${(props.layer.thickness * 100).toFixed(0)}%`"
+          :step="1"
+          :min="1"
+          :max="100"
+          :label-value="`${props.layer.thickness}%`"
           label
           @update:model-value="handleThicknessUpdate"
         />

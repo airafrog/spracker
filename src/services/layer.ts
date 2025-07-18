@@ -153,10 +153,10 @@ export class LayerService {
    * @throws Will throw an error if the new height is not between 0 and 1.
    */
   public setHeight(height: number) {
-    if (height < 0 || height > 1) {
-      throw new Error("Layer height must be a percentage between 0 and 1");
+    if (height < 0 || height > 100) {
+      throw new Error("Layer height must be a percentage between 0 and 100");
     }
-    this.height = height;
+    this.height = height / 100;
     this.updateClippingPlanes();
   }
 
@@ -166,10 +166,10 @@ export class LayerService {
    * @throws Will throw an error if the new thickness is not between 0 and 1.
    */
   public setThickness(thickness: number) {
-    if (thickness <= 0 || thickness > 1) {
-      throw new Error("Layer thickness must be a percentage between 0 and 1");
+    if (thickness < 1 || thickness > 100) {
+      throw new Error("Layer thickness must be a percentage between 1 and 100");
     }
-    this.thickness = thickness;
+    this.thickness = thickness / 100;
     this.updateClippingPlanes();
   }
 

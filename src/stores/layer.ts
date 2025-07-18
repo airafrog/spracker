@@ -11,7 +11,7 @@ export const useLayerStore = defineStore("layer", () => {
   const activeLayer = ref<Layer | null>(null);
   const layerServices: { [id: string]: LayerService } = {};
 
-  function addLayer(gltf: GLTF, height = 0, thickness = 0.1) {
+  function addLayer(gltf: GLTF, height = 0, thickness = 10) {
     const id = uuidv4();
 
     const layerService = new LayerService(gltf, height, thickness);
@@ -22,7 +22,7 @@ export const useLayerStore = defineStore("layer", () => {
       id,
       height,
       thickness,
-      name: `Layer ${Object.keys(layers.value).length + 1}`,
+      name: `Layer ${Object.keys(layers.value).length}`,
     };
   }
 
@@ -31,9 +31,9 @@ export const useLayerStore = defineStore("layer", () => {
     layerCount: number,
     thickness: number
   ) {
-    const separation = 1 / layerCount;
+    const separation = 100 / layerCount;
     for (let i = 0; i < layerCount; i++) {
-      const height = Math.floor(separation * i * 100) / 100; // Round to 2 decimal places
+      const height = Math.floor(separation * i);
       addLayer(gltf, height, thickness);
     }
   }
@@ -59,10 +59,8 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerThickness(id: string, thickness: number) {
-    if (thickness <= 0 || thickness > 1) return;
     if (!(id in layers.value)) return;
     if (!(id in layerServices)) return;
-
     const layer = layers.value[id];
     const layerService = layerServices[id];
 
@@ -73,10 +71,8 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function setLayerHeight(id: string, height: number) {
-    if (height < 0 || height > 1) return;
     if (!(id in layers.value)) return;
     if (!(id in layerServices)) return;
-
     const layer = layers.value[id];
     const layerService = layerServices[id];
 
