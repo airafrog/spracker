@@ -60,7 +60,14 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function removeAllLayers() {
-    layers.value.forEach((layer) => removeLayer(layer.id));
+    layers.value.forEach((layer) => {
+      if (!(layer.id in layerServices)) return;
+      layerServices[layer.id].dispose();
+      delete layerServices[layer.id];
+    });
+
+    layers.value = [];
+    activeLayer.value = null;
   }
 
   function setLayerThickness(id: string, thickness: number) {
@@ -69,7 +76,6 @@ export const useLayerStore = defineStore("layer", () => {
 
     if (!(id in layerServices)) return;
     const layerService = layerServices[id];
-
     layerService.setThickness(thickness);
 
     layer.thickness = thickness;

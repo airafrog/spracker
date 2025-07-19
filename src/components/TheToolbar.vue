@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { GLTF } from "three/examples/jsm/Addons.js";
-import { onMounted } from "vue";
 
 import LayerList from "./LayerList.vue";
 import ActiveLayer from "./ActiveLayer.vue";
@@ -12,10 +11,6 @@ const props = defineProps<{
 }>();
 
 const layerStore = useLayerStore();
-
-onMounted(() => {
-  layerStore.createEvenlySpacedLayers(props.gltf, 20, 10);
-});
 </script>
 
 <template>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { GLTF } from "three/examples/jsm/Addons.js";
+import { ref } from "vue";
 
+import EvenlySpacedLayersDialog from "./dialogs/EvenlySpacedLayersDialog.vue";
 import LayerCard from "./LayerCard.vue";
 import { useLayerStore } from "../stores";
-import { ref } from "vue";
 
 const props = defineProps<{
   gltf: GLTF;
@@ -15,64 +16,24 @@ function handleCreateLayer() {
   layerStore.createLayer(props.gltf);
 }
 
-const showCreateEvenlySpacedLayersDialog = ref(false);
-const evenlySpacedLayerCount = ref(10);
-const evenlySpacedLayerThickness = ref(10);
-function handleCreateEvenlySpacedLayers() {
-  layerStore.createEvenlySpacedLayers(
-    props.gltf,
-    evenlySpacedLayerCount.value,
-    evenlySpacedLayerThickness.value
-  );
-}
+const showEvenlySpacedDialog = ref(false);
 </script>
 
 <template>
   <div class="full-height">
-    <q-dialog v-model="showCreateEvenlySpacedLayersDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Create Evenly Spaced Layers</div>
-        </q-card-section>
-
-        <q-card-section class="flex q-gutter-x-md">
-          <q-input
-            v-model="evenlySpacedLayerCount"
-            type="number"
-            label="Number of Layers"
-            min="1"
-            filled
-          />
-          <q-input
-            v-model="evenlySpacedLayerThickness"
-            type="number"
-            label="Layer Thickness"
-            min="1"
-            suffix="%"
-            filled
-          />
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn label="Cancel" flat v-close-popup />
-          <q-btn
-            color="primary"
-            label="Create"
-            @click="handleCreateEvenlySpacedLayers"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <evenly-spaced-layers-dialog
+      v-model="showEvenlySpacedDialog"
+      :gltf="props.gltf"
+    />
 
     <div class="column full-height">
       <div class="col-auto">
         <q-toolbar class="bg-primary">
           <q-toolbar-title class="q-mr-auto">Layers</q-toolbar-title>
-          <q-btn flat icon="fas fa-list" @click="" />
           <q-btn
             flat
             icon="fas fa-layer-group"
-            @click="showCreateEvenlySpacedLayersDialog = true"
+            @click="showEvenlySpacedDialog = true"
           />
           <q-btn flat icon="fas fa-plus" @click="handleCreateLayer" />
         </q-toolbar>
