@@ -28,6 +28,12 @@ function handleNameUpdate(value: string | number | null) {
   layerStore.setLayerName(props.layer.id, value);
 }
 
+function handleSetOrder(value: number | string | null) {
+  if (value === null) return;
+  if (typeof value === "string") value = parseInt(value);
+  layerStore.setLayerOrder(props.layer.id, value);
+}
+
 function showDeleteDialog() {
   Dialog.create({
     title: "Delete Layer",
@@ -57,13 +63,27 @@ function showDeleteDialog() {
         <q-input
           :model-value="props.layer.name"
           type="text"
-          class="q-mr-auto"
+          class="q-mr-sm"
           filled
           dense
           @update:model-value="handleNameUpdate"
         />
 
-        <q-btn icon="fas fa-trash" flat @click="showDeleteDialog" />
+        <q-input
+          :model-value="layerStore.getLayerIndex(props.layer.id)"
+          type="number"
+          style="width: 6em"
+          filled
+          dense
+          @update:model-value="handleSetOrder"
+        />
+
+        <q-btn
+          class="q-ml-auto"
+          icon="fas fa-trash"
+          flat
+          @click="showDeleteDialog"
+        />
         <q-btn
           icon="fas fa-close"
           flat
@@ -111,7 +131,6 @@ function showDeleteDialog() {
 
       <q-btn
         icon="fas fa-fill-drip"
-        color="primary"
         style="position: absolute; left: 0; bottom: 0"
       >
         <q-popup-proxy>

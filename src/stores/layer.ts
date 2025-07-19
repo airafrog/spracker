@@ -38,6 +38,10 @@ export const useLayerStore = defineStore("layer", () => {
     }
   }
 
+  function getLayerIndex(id: string): number {
+    return layers.value.findIndex((layer) => layer.id === id);
+  }
+
   function getLayerService(id: string): LayerService | null {
     if (!(id in layerServices)) return null;
     return layerServices[id];
@@ -90,16 +94,37 @@ export const useLayerStore = defineStore("layer", () => {
     layer.name = name;
   }
 
+  function setLayerOrder(id: string, newIndex: number) {
+    if (newIndex < 0) newIndex = 0;
+    if (newIndex >= layers.value.length) newIndex = layers.value.length - 1;
+
+    const layerIndex = layers.value.findIndex((layer) => layer.id === id);
+    const layer = layers.value[layerIndex];
+    layers.value.splice(layerIndex, 1);
+    layers.value.splice(newIndex, 0, layer);
+  }
+
+  function shiftLayerOrder(id: string, delta: number) {
+    const layerIndex = layers.value.findIndex((layer) => layer.id === id);
+    if (layerIndex === -1) return;
+
+    const newIndex = layerIndex + delta;
+    setLayerOrder(id, newIndex);
+  }
+
   return {
     activeLayer,
     addEvenlySpacedLayers,
     addLayer,
-    setLayerHeight,
-    setLayerName,
+    setLayerOrder,
+    shiftLayerOrder,
+    getLayerIndex,
     getLayerService,
-    setLayerThickness,
     layers,
     removeAllLayers,
     removeLayer,
+    setLayerHeight,
+    setLayerName,
+    setLayerThickness,
   };
 });

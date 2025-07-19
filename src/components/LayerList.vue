@@ -29,14 +29,36 @@ function handleAddLayer() {
     <div class="col">
       <q-scroll-area style="height: 100%; max-width: 100%">
         <div class="q-gutter-y-sm q-pa-md">
-          <layer-card
-            v-for="layer in layerStore.layers"
-            :key="layer.id"
-            :layer="layer"
-            @click="layerStore.activeLayer = layer"
-          />
+          <TransitionGroup name="list">
+            <layer-card
+              v-for="layer in layerStore.layers.slice().reverse()"
+              :key="layer.id"
+              :layer="layer"
+              @click="layerStore.activeLayer = layer"
+            />
+          </TransitionGroup>
         </div>
       </q-scroll-area>
     </div>
   </div>
 </template>
+
+<style scoped>
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.list-leave-active {
+  position: absolute;
+}
+</style>

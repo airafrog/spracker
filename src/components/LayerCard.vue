@@ -27,11 +27,34 @@ function handleHeightUpdate(value: number | string | null) {
   if (value < 0 || value > 100) return;
   layerStore.setLayerHeight(props.layer.id, value);
 }
+
+function handleOrderShift(delta: number) {
+  layerStore.shiftLayerOrder(props.layer.id, delta);
+}
 </script>
 
 <template>
   <div :class="{ active: isActive }" class="layer-card">
     <div class="row q-col-gutter-x-sm">
+      <div class="col-auto column justify-center">
+        <div class="col">
+          <q-btn
+            icon="fas fa-caret-up"
+            size="xs"
+            flat
+            @click="handleOrderShift(1)"
+          />
+        </div>
+        <div class="col">
+          <q-btn
+            icon="fas fa-caret-down"
+            size="xs"
+            flat
+            @click="handleOrderShift(-1)"
+          />
+        </div>
+      </div>
+
       <div class="col column justify-center">
         <span>{{ props.layer.name }}</span>
       </div>
