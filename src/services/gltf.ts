@@ -1,7 +1,6 @@
 import { Loading } from "quasar";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
-import { ref } from "vue";
 
 class GltfService {
   loader = new GLTFLoader();

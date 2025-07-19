@@ -1,25 +1,37 @@
 <script setup lang="ts">
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import { useQuasar } from "quasar";
-import { onMounted, shallowRef } from "vue";
+import { ref, shallowRef } from "vue";
 
+import ShowNewProjectDialog from "./components/dialogs/NewProjectDialog.vue";
 import OriginalScene from "./components/OriginalScene.vue";
 import StackedScene from "./components/StackedScene.vue";
 import TheToolbar from "./components/TheToolbar.vue";
-import { gltfService } from "./services/gltf";
 
 const $q = useQuasar();
 $q.dark.set(true);
 
 const gltf = shallowRef<GLTF>();
+const showNewProjectDialog = ref(false);
 
-onMounted(async () => {
-  gltf.value = await gltfService.load("/models/car/scene.gltf");
-});
+function handleNewProject(projectName: string, loadedGltf: GLTF) {
+  gltf.value = loadedGltf;
+
+  $q.notify({
+    type: "positive",
+    message: `Project "${projectName}" created successfully!`,
+    position: "top",
+  });
+}
 </script>
 
 <template>
   <div class="window-height">
+    <show-new-project-dialog
+      v-model="showNewProjectDialog"
+      @new-project="handleNewProject"
+    />
+
     <div v-if="gltf" class="row full-height">
       <div class="col">
         <the-toolbar :gltf="gltf" />
@@ -34,8 +46,38 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div v-else class="row full-height q-px-xl">
-      <h1>Spracker</h1>
+    <div v-else class="row q-col-gutter-x-xl full-height q-px-lg">
+      <div class="col-12 col-md-6">
+        <div class="q-mb-xl">
+          <h2 class="q-mb-md">Spracker</h2>
+          <p>Easily turn 3D models into sprite stacks!</p>
+        </div>
+
+        <div class="column q-gutter-y-md">
+          <q-btn
+            color="primary"
+            label="New Project"
+            icon="fas fa-plus"
+            align="left"
+            size="lg"
+            no-caps
+            @click="showNewProjectDialog = true"
+          />
+          <q-btn
+            color="primary"
+            label="Load Project"
+            icon="fas fa-folder-open"
+            align="left"
+            size="lg"
+            no-caps
+            @click=""
+          />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <p>hi</p>
+      </div>
     </div>
   </div>
 </template>
