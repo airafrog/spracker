@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, shallowRef } from "vue";
-import { gltfService } from "../../services/gltf";
+import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
+import { ref, shallowRef } from "vue";
+
+import { gltfService } from "../../services/gltf";
 
 const show = defineModel<boolean>({ required: true });
 const emit = defineEmits<{
@@ -16,6 +18,15 @@ async function handleCreate() {
 
   const fileUrl = URL.createObjectURL(file.value);
   const gltf = await gltfService.load(fileUrl);
+  // remove metalness
+  gltf.scene.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.material.metalness = 0;
+      child.material.roughness = 1;
+      child.material.needsUpdate = true;
+    }
+  });
+
   emit("newProject", projectName.value, gltf);
 
   show.value = false;
