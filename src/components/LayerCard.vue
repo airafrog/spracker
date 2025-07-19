@@ -59,7 +59,7 @@ function handleOrderShift(delta: number) {
         <span>{{ props.layer.name }}</span>
       </div>
 
-      <div class="col-3">
+      <div class="col-auto">
         <q-input
           :model-value="props.layer.height"
           type="number"
@@ -74,7 +74,7 @@ function handleOrderShift(delta: number) {
         />
       </div>
 
-      <div class="col-3">
+      <div class="col-auto">
         <q-input
           :model-value="props.layer.thickness"
           type="number"
