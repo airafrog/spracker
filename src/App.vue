@@ -33,6 +33,10 @@ onMounted(async () => {
         <stacked-scene />
       </div>
     </div>
+
+    <div v-else class="row full-height q-px-xl">
+      <h1>Spracker</h1>
+    </div>
   </div>
 </template>
 
