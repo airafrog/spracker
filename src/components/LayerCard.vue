@@ -92,15 +92,15 @@ function handleOrderShift(delta: number) {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .layer-card {
   padding: 0.5em;
   border-radius: 0.5em;
-  background-color: #1c313a;
+  background-color: $secondary;
   cursor: pointer;
 }
 
 .active {
-  background-color: #355b6c !important;
+  background-color: $accent !important;
 }
 </style>

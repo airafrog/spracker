@@ -39,7 +39,6 @@ function showDeleteDialog() {
     title: "Delete Layer",
     message: `Are you sure you want to delete layer "${props.layer.name}"?`,
     persistent: true,
-    class: "bg-primary",
     cancel: {
       push: true,
       color: "secondary",

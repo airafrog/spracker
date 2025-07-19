@@ -11,7 +11,7 @@ export const useLayerStore = defineStore("layer", () => {
   const activeLayer = ref<Layer | null>(null);
   const layerServices: { [id: string]: LayerService } = {};
 
-  function addLayer(gltf: GLTF, height = 0, thickness = 10) {
+  function createLayer(gltf: GLTF, height = 0, thickness = 10) {
     const id = uuidv4();
 
     const layerService = new LayerService(gltf, height, thickness);
@@ -26,15 +26,17 @@ export const useLayerStore = defineStore("layer", () => {
     });
   }
 
-  function addEvenlySpacedLayers(
+  function createEvenlySpacedLayers(
     gltf: GLTF,
     layerCount: number,
     thickness: number
   ) {
+    removeAllLayers();
+
     const separation = 100 / layerCount;
     for (let i = 0; i < layerCount; i++) {
       const height = Math.floor(separation * i);
-      addLayer(gltf, height, thickness);
+      createLayer(gltf, height, thickness);
     }
   }
 
@@ -113,8 +115,8 @@ export const useLayerStore = defineStore("layer", () => {
 
   return {
     activeLayer,
-    addEvenlySpacedLayers,
-    addLayer,
+    createEvenlySpacedLayers,
+    createLayer,
     setLayerOrder,
     shiftLayerOrder,
     getLayerIndex,
