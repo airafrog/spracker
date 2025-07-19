@@ -18,21 +18,22 @@ let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
 function createStack() {
-  layerStore.layers.forEach((layer, i) => {
+  const layerValues = Object.values(layerStore.layers);
+
+  layerValues.forEach((layer, i) => {
     const layerService = layerStore.getLayerService(layer.id);
     if (!layerService) return;
+    const separation = layerService.gltfSize.y / layerValues.length;
 
     const layerMesh = layerService.getMesh();
-    const separation = layerService.gltfSize.y / layerStore.layers.length;
     layerMesh.position.set(0, separation * i, 0);
     layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
     stackGroup.add(layerMesh);
   });
 }
 watch(
-  () => layerStore.layers.length,
+  () => layerStore.layers.map((layer) => layer.id),
   () => {
-    console.log("call");
     stackGroup.clear();
     createStack();
   },
