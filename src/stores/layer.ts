@@ -48,14 +48,13 @@ export const useLayerStore = defineStore("layer", () => {
   }
 
   function removeLayer(id: string) {
-    if (!(id in layers.value)) return;
     if (!(id in layerServices)) return;
-
     layerServices[id].dispose();
     delete layerServices[id];
 
-    const layerIndex = layers.value.findIndex((layer) => layer.id === id);
-    if (layerIndex !== -1) layers.value.splice(layerIndex, 1);
+    const layerIndex = getLayerIndex(id);
+    if (layerIndex === -1) return;
+    layers.value.splice(layerIndex, 1);
   }
 
   function removeAllLayers() {
