@@ -25,6 +25,7 @@ export class LayerService {
     canvas: LayerService.canvas,
   });
   static {
+    LayerService.renderer.setSize(64, 64);
     LayerService.renderer.localClippingEnabled = true;
     LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
   }

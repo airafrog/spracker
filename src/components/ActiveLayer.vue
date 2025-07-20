@@ -109,7 +109,12 @@ function handleSetOrder(value: number | string | null) {
           <div class="full-width full-height q-pa-lg">
             <img
               :src="props.layer.canvasDataUrl"
-              style="width: 100%; height: 100%; object-fit: contain"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                image-rendering: pixelated;
+              "
             />
           </div>
         </div>
