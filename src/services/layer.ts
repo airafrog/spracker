@@ -143,7 +143,7 @@ export class LayerService {
     const texture = textureLoader.load(canvasDataUrl);
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
-    texture.colorSpace = THREE.LinearSRGBColorSpace;
+    texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     this.mesh.material.map = texture;
     this.mesh.material.needsUpdate = true;
