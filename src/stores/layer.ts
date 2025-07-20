@@ -57,6 +57,10 @@ export const useLayerStore = defineStore("layer", () => {
     const layerIndex = getLayerIndex(id);
     if (layerIndex === -1) return;
     layers.value.splice(layerIndex, 1);
+
+    if (activeLayer.value && activeLayer.value.id === id) {
+      activeLayer.value = null;
+    }
   }
 
   function removeAllLayers() {
