@@ -141,8 +141,8 @@ export class LayerService {
 
     // Load the texture from the canvas data URL and apply it to the mesh
     const texture = textureLoader.load(canvasDataUrl);
-    texture.minFilter = THREE.LinearFilter; // Prevents mipmapping artifacts
-    texture.magFilter = THREE.LinearFilter; // Prevents mipmapping artifacts
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
     texture.needsUpdate = true;
     this.mesh.material.map = texture;
     this.mesh.material.needsUpdate = true;
