@@ -25,16 +25,22 @@ export class LayerService {
     canvas: LayerService.canvas,
   });
   static {
-    LayerService.renderer.setSize(64, 64);
     LayerService.renderer.localClippingEnabled = true;
     LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
   }
 
-  constructor(gltf: GLTF, layerHeight: number, thickness: number) {
+  constructor(
+    gltf: GLTF,
+    layerHeight: number,
+    thickness: number,
+    rendererWidth: number,
+    rendererHeight: number
+  ) {
     this.gltfBox.setFromObject(gltf.scene);
     this.gltfBox.getSize(this.gltfSize);
     this.setHeight(layerHeight);
     this.setThickness(thickness);
+    this.setRendererSize(rendererWidth, rendererHeight);
     this.configureCamera();
 
     this.mesh = new THREE.Mesh(
@@ -98,6 +104,17 @@ export class LayerService {
 
     this.lowerClippingPlane.constant = -(actualHeight - worldThickness / 2);
     this.upperClippingPlane.constant = actualHeight + worldThickness / 2;
+  }
+
+  /**
+   * Sets the size of the renderer.
+   * @param width The new width of the renderer.
+   * @param height The new height of the renderer.
+   */
+  public setRendererSize(width: number, height: number) {
+    LayerService.renderer.setSize(width, height);
+    LayerService.canvas.width = width;
+    LayerService.canvas.height = height;
   }
 
   /**

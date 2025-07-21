@@ -10,11 +10,19 @@ export const useLayerStore = defineStore("layer", () => {
   const layers = ref<Layer[]>([]);
   const activeLayer = ref<Layer | null>(null);
   const layerServices: { [id: string]: LayerService } = {};
+  const layerWidth = ref(32);
+  const layerHeight = ref(32);
 
   function createLayer(gltf: GLTF, height = 0, thickness = 10) {
     const id = uuidv4();
 
-    const layerService = new LayerService(gltf, height, thickness);
+    const layerService = new LayerService(
+      gltf,
+      height,
+      thickness,
+      layerWidth.value,
+      layerHeight.value
+    );
     layerServices[id] = layerService;
 
     layers.value.push({
@@ -105,6 +113,18 @@ export const useLayerStore = defineStore("layer", () => {
     layer.name = name;
   }
 
+  function setLayerSize(width: number, height: number) {
+    layerWidth.value = width;
+    layerHeight.value = height;
+
+    layers.value.forEach((layer) => {
+      if (!(layer.id in layerServices)) return;
+      const layerService = layerServices[layer.id];
+      layerService.setRendererSize(width, height);
+      layer.canvasDataUrl = layerService.render();
+    });
+  }
+
   function setLayerOrder(id: string, newIndex: number) {
     if (newIndex < 0) newIndex = 0;
     if (newIndex >= layers.value.length) newIndex = layers.value.length - 1;
@@ -132,10 +152,13 @@ export const useLayerStore = defineStore("layer", () => {
     getLayerIndex,
     getLayerService,
     layers,
+    layerWidth,
+    layerHeight,
     removeAllLayers,
     removeLayer,
     setLayerHeight,
     setLayerName,
+    setLayerSize,
     setLayerThickness,
   };
 });

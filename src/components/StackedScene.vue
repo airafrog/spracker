@@ -32,7 +32,11 @@ function createStack() {
   });
 }
 watch(
-  () => layerStore.layers.map((layer) => layer.id),
+  [
+    () => layerStore.layers.map((layer) => layer.id),
+    layerStore.layerWidth,
+    layerStore.layerHeight,
+  ],
   () => {
     stackGroup.clear();
     createStack();

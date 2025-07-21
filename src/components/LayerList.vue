@@ -3,6 +3,7 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
 
 import EvenlySpacedLayersDialog from "./dialogs/EvenlySpacedLayersDialog.vue";
+import LayerSizeDialog from "./dialogs/LayerSizeDialog.vue";
 import LayerCard from "./LayerCard.vue";
 import { useLayerStore } from "../stores";
 
@@ -17,6 +18,7 @@ function handleCreateLayer() {
 }
 
 const showEvenlySpacedDialog = ref(false);
+const showLayerSizeDialog = ref(false);
 </script>
 
 <template>
@@ -26,10 +28,17 @@ const showEvenlySpacedDialog = ref(false);
       :gltf="props.gltf"
     />
 
+    <layer-size-dialog v-model="showLayerSizeDialog" />
+
     <div class="column full-height">
       <div class="col-auto">
         <q-toolbar class="bg-primary">
           <q-toolbar-title class="q-mr-auto">Layers</q-toolbar-title>
+          <q-btn
+            flat
+            icon="photo_size_select_large"
+            @click="showLayerSizeDialog = true"
+          />
           <q-btn
             flat
             icon="fas fa-layer-group"
@@ -41,7 +50,7 @@ const showEvenlySpacedDialog = ref(false);
 
       <div class="col">
         <q-scroll-area style="height: 100%; max-width: 100%">
-          <div class="q-gutter-y-sm q-pa-md">
+          <div v-if="layerStore.layers.length" class="q-gutter-y-sm q-pa-md">
             <TransitionGroup name="list">
               <layer-card
                 v-for="layer in layerStore.layers.slice().reverse()"
@@ -51,13 +60,35 @@ const showEvenlySpacedDialog = ref(false);
               />
             </TransitionGroup>
           </div>
+
+          <div v-else class="q-gutter-y-sm q-pa-md">
+            <q-btn
+              label="Create layer"
+              icon="add"
+              size="lg"
+              color="secondary"
+              class="full-width"
+              align="left"
+              no-caps
+              @click="handleCreateLayer"
+            />
+          </div>
         </q-scroll-area>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.layer-card {
+  padding: 0.5em;
+  border-radius: 0.5em;
+  background-color: $secondary;
+  cursor: pointer;
+}
+
+/* Transition styles for the layer cards */
+
 .list-move, /* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {

@@ -57,7 +57,7 @@ function handleNewProject(projectName: string, loadedGltf: GLTF) {
           <q-btn
             color="primary"
             label="New Project"
-            icon="fas fa-plus"
+            icon="add"
             align="left"
             size="lg"
             no-caps
@@ -66,7 +66,7 @@ function handleNewProject(projectName: string, loadedGltf: GLTF) {
           <q-btn
             color="primary"
             label="Load Project"
-            icon="fas fa-folder-open"
+            icon="folder_open"
             align="left"
             size="lg"
             no-caps
@@ -75,9 +75,7 @@ function handleNewProject(projectName: string, loadedGltf: GLTF) {
         </div>
       </div>
 
-      <div class="col-12 col-md-6">
-        <p>hi</p>
-      </div>
+      <div class="col-12 col-md-6"></div>
     </div>
   </div>
 </template>
