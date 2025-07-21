@@ -7,6 +7,7 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import SceneToolbar from "./SceneToolbar.vue";
 import { CameraService } from "../services/camera";
 import { useLayerStore, useSettingsStore } from "../stores";
+import type { Axis } from "../types";
 
 const props = defineProps<{
   gltf: GLTF;
@@ -107,6 +108,10 @@ watch(
     deep: true,
   }
 );
+
+function handleViewAxis(axis: Axis, distance: number) {
+  cameraService.viewAxis(axis, distance);
+}
 </script>
 
 <template>
@@ -115,6 +120,7 @@ watch(
       v-model:background-hex="settingsStore.originalSceneBackgroundHex"
       :camera-mode="cameraService.getCameraMode().value"
       @toggle-camera-mode="cameraService.toggleCameraMode()"
+      @view-axis="handleViewAxis"
     />
 
     <div ref="canvasContainer" class="canvas-container">

@@ -162,7 +162,6 @@ export class LayerService {
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
     this.mesh.material.map = texture;
     this.mesh.material.needsUpdate = true;
 

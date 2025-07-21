@@ -5,3 +5,5 @@ export type Layer = {
   thickness: number;
   name: string;
 };
+
+export type Axis = "x" | "y" | "z";

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
+import type { Axis } from "../types";
 
 export class CameraService {
   private cameraMode = ref<"perspective" | "orthographic">("perspective");
@@ -16,10 +17,7 @@ export class CameraService {
     this.orthographicCamera = new THREE.OrthographicCamera();
     this.camera = this.perspectiveCamera;
 
-    this.perspectiveCamera.position.set(0, 10, 10);
-    this.perspectiveCamera.lookAt(0, 0, 0);
-    this.orthographicCamera.position.set(0, 10, 10);
-    this.orthographicCamera.lookAt(0, 0, 0);
+    this.setPosition(0, 10, 10);
     this.orthographicCamera.near = -500;
     this.orthographicCamera.far = 500;
   }
@@ -66,6 +64,22 @@ export class CameraService {
   public setPosition(x: number, y: number, z: number) {
     this.perspectiveCamera.position.set(x, y, z);
     this.orthographicCamera.position.set(x, y, z);
+    this.perspectiveCamera.lookAt(0, 0, 0);
+    this.orthographicCamera.lookAt(0, 0, 0);
+  }
+
+  public viewAxis(axis: Axis, distance: number) {
+    switch (axis) {
+      case "x":
+        this.setPosition(distance, 0, 0);
+        break;
+      case "y":
+        this.setPosition(0, distance, 0);
+        break;
+      case "z":
+        this.setPosition(0, 0, distance);
+        break;
+    }
   }
 
   public animate(_delta?: number) {

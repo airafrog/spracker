@@ -5,6 +5,7 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import SceneToolbar from "./SceneToolbar.vue";
 import { CameraService } from "../services/camera";
 import { useLayerStore, useSettingsStore } from "../stores";
+import type { Axis } from "../types";
 
 const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
@@ -34,8 +35,8 @@ function createStack() {
 watch(
   [
     () => layerStore.layers.map((layer) => layer.id),
-    layerStore.layerWidth,
-    layerStore.layerHeight,
+    () => layerStore.layerWidth,
+    () => layerStore.layerHeight,
   ],
   () => {
     stackGroup.clear();
@@ -92,6 +93,10 @@ onUnmounted(() => {
   if (renderer) renderer.dispose();
   window.removeEventListener("resize", resizeFunction);
 });
+
+function handleViewAxis(axis: Axis, distance: number) {
+  cameraService.viewAxis(axis, distance);
+}
 </script>
 
 <template>
@@ -100,6 +105,7 @@ onUnmounted(() => {
       v-model:background-hex="settingsStore.stackedSceneBackgroundHex"
       :camera-mode="cameraService.getCameraMode().value"
       @toggle-camera-mode="cameraService.toggleCameraMode()"
+      @view-axis="handleViewAxis"
     />
 
     <div ref="canvasContainer" class="canvas-container">
