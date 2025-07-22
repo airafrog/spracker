@@ -37,6 +37,8 @@ const showLayerSizeDialog = ref(false);
           <q-btn
             flat
             icon="photo_size_select_large"
+            :label="`${layerStore.layerWidth}x${layerStore.layerHeight}`"
+            no-caps
             @click="showLayerSizeDialog = true"
           />
           <q-btn
