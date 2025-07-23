@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useLayerStore } from "../stores";
-import type { Layer } from "../types";
+import { useLayerStore } from "@/stores";
+import type { Layer } from "@/types";
 
 const props = defineProps<{
   layer: Layer;

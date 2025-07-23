@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useLayerStore } from "../../stores";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { Notify } from "quasar";
+import type { GLTF } from "three/examples/jsm/Addons.js";
+import { ref } from "vue";
+
+import { useLayerStore } from "@/stores";
 
 const model = defineModel<boolean>({ required: true });
 const props = defineProps<{

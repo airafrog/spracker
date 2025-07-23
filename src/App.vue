@@ -3,10 +3,10 @@ import type { GLTF } from "three/examples/jsm/Addons.js";
 import { useQuasar } from "quasar";
 import { ref, shallowRef } from "vue";
 
-import ShowNewProjectDialog from "./components/dialogs/NewProjectDialog.vue";
-import OriginalScene from "./components/OriginalScene.vue";
-import StackedScene from "./components/StackedScene.vue";
-import TheToolbar from "./components/TheToolbar.vue";
+import ShowNewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
+import OriginalScene from "@/components/scenes/OriginalScene.vue";
+import StackedScene from "@/components/scenes/StackedScene.vue";
+import TheToolbar from "@/components/toolbars/TheToolbar.vue";
 
 const $q = useQuasar();
 $q.dark.set(true);

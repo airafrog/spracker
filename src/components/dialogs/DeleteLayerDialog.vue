@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Notify } from "quasar";
-import { useLayerStore } from "../../stores";
-import type { Layer } from "../../types";
+
+import { useLayerStore } from "@/stores";
+import type { Layer } from "@/types";
 
 const model = defineModel<boolean>({ required: true });
 const props = defineProps<{

@@ -2,10 +2,10 @@
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
 
-import EvenlySpacedLayersDialog from "./dialogs/EvenlySpacedLayersDialog.vue";
-import LayerSizeDialog from "./dialogs/LayerSizeDialog.vue";
-import LayerCard from "./LayerCard.vue";
-import { useLayerStore } from "../stores";
+import EvenlySpacedLayersDialog from "@/components/dialogs/EvenlySpacedLayersDialog.vue";
+import LayerSizeDialog from "@/components/dialogs/LayerSizeDialog.vue";
+import LayerCard from "@/components/layers/LayerCard.vue";
+import { useLayerStore } from "@/stores";
 
 const props = defineProps<{
   gltf: GLTF;

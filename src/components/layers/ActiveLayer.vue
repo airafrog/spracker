@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import DeleteLayerDialog from "./dialogs/DeleteLayerDialog.vue";
-import { useLayerStore, useSettingsStore } from "../stores";
-import type { Layer } from "../types";
+import DeleteLayerDialog from "@/components/dialogs/DeleteLayerDialog.vue";
+import { useLayerStore, useSettingsStore } from "@/stores";
+import type { Layer } from "@/types";
 
 const props = defineProps<{
   layer: Layer;

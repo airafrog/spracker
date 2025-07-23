@@ -2,7 +2,7 @@
 import { Notify } from "quasar";
 import { ref } from "vue";
 
-import { useLayerStore } from "../../stores";
+import { useLayerStore } from "@/stores";
 
 const model = defineModel<boolean>({ required: true });
 

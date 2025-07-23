@@ -3,7 +3,7 @@ import * as THREE from "three";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref, shallowRef } from "vue";
 
-import { gltfService } from "../../services/gltf";
+import { gltfService } from "@/services/gltf";
 
 const show = defineModel<boolean>({ required: true });
 const emit = defineEmits<{

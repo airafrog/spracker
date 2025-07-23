@@ -1,34 +1,49 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import * as THREE from "three";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
-import SceneToolbar from "./SceneToolbar.vue";
-import { CameraService } from "../services/camera";
-import { useLayerStore, useSettingsStore } from "../stores";
-import type { Axis } from "../types";
+import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
+import { CameraService } from "@/services/camera";
+import { useLayerStore, useSettingsStore } from "@/stores";
+import type { Axis } from "@/types";
 
-const props = defineProps<{
-  gltf: GLTF;
-}>();
-
+const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
+const stackGroup = new THREE.Group();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const edgesGeometry = new THREE.EdgesGeometry(boxGeometry);
-const lineMaterial = new THREE.LineBasicMaterial({
-  color: 0xffffff,
-  linewidth: 1,
-});
-const layerWireframe = new THREE.LineSegments(edgesGeometry, lineMaterial);
+function createStack() {
+  const layerValues = Object.values(layerStore.layers);
+
+  layerValues.forEach((layer, i) => {
+    const layerService = layerStore.getLayerService(layer.id);
+    if (!layerService) return;
+    const separation = layerService.gltfSize.y / layerValues.length;
+
+    const layerMesh = layerService.getMesh();
+    layerMesh.position.set(0, separation * i, 0);
+    layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
+    stackGroup.add(layerMesh);
+  });
+}
+watch(
+  [
+    () => layerStore.layers.map((layer) => layer.id),
+    () => layerStore.layerWidth,
+    () => layerStore.layerHeight,
+  ],
+  () => {
+    stackGroup.clear();
+    createStack();
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
   if (!canvas.value) throw new Error("Canvas is not defined");
@@ -50,8 +65,7 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
-  scene.add(props.gltf.scene);
-  scene.add(layerWireframe);
+  scene.add(stackGroup);
 
   function animate() {
     cameraService.animate();
@@ -68,7 +82,7 @@ onMounted(() => {
   window.addEventListener("resize", resizeFunction);
 
   watch(
-    () => settingsStore.originalSceneBackgroundHex,
+    () => settingsStore.stackedSceneBackgroundHex,
     (newColor) => (scene.background = new THREE.Color(newColor)),
     { immediate: true }
   );
@@ -80,35 +94,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeFunction);
 });
 
-const layerStore = useLayerStore();
-const { activeLayer } = storeToRefs(layerStore);
-watch(
-  activeLayer,
-  (newLayer) => {
-    if (!newLayer) {
-      layerWireframe.visible = false;
-      return;
-    }
-    layerWireframe.visible = true;
-
-    const layerService = layerStore.getLayerService(newLayer.id);
-    if (!layerService) return;
-    const height = layerService.getWorldHeight();
-    const thickness = layerService.getWorldThickness();
-
-    layerWireframe.position.y = height;
-    layerWireframe.scale.set(
-      layerService.gltfSize.x,
-      thickness,
-      layerService.gltfSize.z
-    );
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
-
 function handleViewAxis(axis: Axis, distance: number) {
   cameraService.viewAxis(axis, distance);
 }
@@ -117,7 +102,7 @@ function handleViewAxis(axis: Axis, distance: number) {
 <template>
   <div class="full-height" style="position: relative">
     <scene-toolbar
-      v-model:background-hex="settingsStore.originalSceneBackgroundHex"
+      v-model:background-hex="settingsStore.stackedSceneBackgroundHex"
       :camera-mode="cameraService.getCameraMode().value"
       @toggle-camera-mode="cameraService.toggleCameraMode()"
       @view-axis="handleViewAxis"

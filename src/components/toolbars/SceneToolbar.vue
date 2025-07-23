@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Axis } from "../types";
+import type { Axis } from "@/types";
 
 const props = defineProps<{
   cameraMode: string;

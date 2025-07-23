@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { GLTF } from "three/examples/jsm/Addons.js";
 
-import LayerList from "./LayerList.vue";
-import ActiveLayer from "./ActiveLayer.vue";
+import LayerList from "@/components/layers/LayerList.vue";
+import ActiveLayer from "@/components/layers/ActiveLayer.vue";
 
-import { useLayerStore } from "../stores";
+import { useLayerStore } from "@/stores";
 
 const props = defineProps<{
   gltf: GLTF;
