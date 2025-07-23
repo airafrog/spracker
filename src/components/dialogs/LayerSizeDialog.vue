@@ -17,7 +17,6 @@ function handleSetLayerSize() {
     icon: "fas fa-check-circle",
     message: `Set layer size to ${newLayerWidth.value}x${newLayerHeight.value} px!`,
     color: "positive",
-    position: "top",
   });
 
   model.value = false;

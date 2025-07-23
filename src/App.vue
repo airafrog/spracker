@@ -20,7 +20,6 @@ function handleNewProject(projectName: string, loadedGltf: GLTF) {
   $q.notify({
     type: "positive",
     message: `Project "${projectName}" created successfully!`,
-    position: "top",
   });
 }
 </script>

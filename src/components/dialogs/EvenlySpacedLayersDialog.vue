@@ -26,7 +26,6 @@ function handleCreate() {
     icon: "fas fa-check-circle",
     message: `Created ${layerCount.value} layers`,
     color: "positive",
-    position: "top",
   });
 }
 </script>

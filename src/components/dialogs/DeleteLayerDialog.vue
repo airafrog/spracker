@@ -19,7 +19,6 @@ function handleDelete() {
     icon: "fas fa-check-circle",
     message: `Deleted layer "${props.layer.name}"`,
     color: "positive",
-    position: "top",
   });
 }
 </script>
