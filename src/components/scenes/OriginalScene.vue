@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import * as THREE from "three";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
@@ -9,10 +8,7 @@ import { CameraService } from "@/services/camera";
 import { useLayerStore, useSettingsStore } from "@/stores";
 import type { Axis } from "@/types";
 
-const props = defineProps<{
-  gltf: GLTF;
-}>();
-
+const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
 
 const scene = new THREE.Scene();
@@ -31,6 +27,7 @@ const lineMaterial = new THREE.LineBasicMaterial({
 const layerWireframe = new THREE.LineSegments(edgesGeometry, lineMaterial);
 
 onMounted(() => {
+  if (!layerStore.gltf) throw new Error("Layer store GLTF is not defined");
   if (!canvas.value) throw new Error("Canvas is not defined");
   if (!canvasContainer.value) {
     throw new Error("Canvas container is not defined");
@@ -50,7 +47,7 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
-  scene.add(props.gltf.scene);
+  scene.add(layerStore.gltf.scene);
   scene.add(layerWireframe);
 
   function animate() {
@@ -80,7 +77,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeFunction);
 });
 
-const layerStore = useLayerStore();
 const { activeLayer } = storeToRefs(layerStore);
 watch(
   activeLayer,

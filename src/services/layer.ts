@@ -1,7 +1,7 @@
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 
-import { textureLoader } from "./texture";
+import { textureLoader } from "@/services/texture";
 
 export class LayerService {
   private scene = new THREE.Scene();

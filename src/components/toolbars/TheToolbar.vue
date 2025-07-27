@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import type { GLTF } from "three/examples/jsm/Addons.js";
-
 import LayerList from "@/components/layers/LayerList.vue";
 import ActiveLayer from "@/components/layers/ActiveLayer.vue";
 
 import { useLayerStore } from "@/stores";
-
-const props = defineProps<{
-  gltf: GLTF;
-}>();
 
 const layerStore = useLayerStore();
 </script>
@@ -16,7 +10,7 @@ const layerStore = useLayerStore();
 <template>
   <div class="column full-height">
     <div class="col">
-      <layer-list :gltf="props.gltf" />
+      <layer-list />
     </div>
 
     <div v-if="layerStore.activeLayer" class="col-7">

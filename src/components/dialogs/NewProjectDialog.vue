@@ -1,15 +1,14 @@
 <script setup lang="ts">
+import { Notify } from "quasar";
 import * as THREE from "three";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref, shallowRef } from "vue";
 
 import { gltfService } from "@/services/gltf";
+import { useLayerStore } from "@/stores";
 
 const show = defineModel<boolean>({ required: true });
-const emit = defineEmits<{
-  (e: "newProject", projectName: string, gltf: GLTF): void;
-}>();
 
+const layerStore = useLayerStore();
 const file = shallowRef<File>();
 const projectName = ref<string>("");
 
@@ -18,7 +17,7 @@ async function handleCreate() {
 
   const fileUrl = URL.createObjectURL(file.value);
   const gltf = await gltfService.load(fileUrl);
-  // remove metalness
+  // Remove metalness
   gltf.scene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
       child.material.metalness = 0;
@@ -26,8 +25,12 @@ async function handleCreate() {
       child.material.needsUpdate = true;
     }
   });
+  layerStore.gltf = gltf;
 
-  emit("newProject", projectName.value, gltf);
+  Notify.create({
+    type: "positive",
+    message: `Project "${projectName.value}" created successfully!`,
+  });
 
   show.value = false;
 }

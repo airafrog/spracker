@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
 
 import EvenlySpacedLayersDialog from "@/components/dialogs/EvenlySpacedLayersDialog.vue";
@@ -7,14 +6,10 @@ import LayerSizeDialog from "@/components/dialogs/LayerSizeDialog.vue";
 import LayerCard from "@/components/layers/LayerCard.vue";
 import { useLayerStore } from "@/stores";
 
-const props = defineProps<{
-  gltf: GLTF;
-}>();
-
 const layerStore = useLayerStore();
 
 function handleCreateLayer() {
-  layerStore.createLayer(props.gltf);
+  layerStore.createLayer();
 }
 
 const showEvenlySpacedDialog = ref(false);
@@ -23,10 +18,7 @@ const showLayerSizeDialog = ref(false);
 
 <template>
   <div class="full-height">
-    <evenly-spaced-layers-dialog
-      v-model="showEvenlySpacedDialog"
-      :gltf="props.gltf"
-    />
+    <evenly-spaced-layers-dialog v-model="showEvenlySpacedDialog" />
 
     <layer-size-dialog v-model="showLayerSizeDialog" />
 

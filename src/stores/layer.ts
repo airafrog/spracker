@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import { v4 as uuidv4 } from "uuid";
-import { ref } from "vue";
+import { ref, shallowRef } from "vue";
 
-import { LayerService } from "../services/layer";
-import type { Layer } from "../types";
+import { LayerService } from "@/services/layer";
+import type { Layer } from "@/types";
 
 export const useLayerStore = defineStore("layer", () => {
   const layers = ref<Layer[]>([]);
@@ -12,12 +12,14 @@ export const useLayerStore = defineStore("layer", () => {
   const layerServices: { [id: string]: LayerService } = {};
   const layerWidth = ref(32);
   const layerHeight = ref(32);
+  const gltf = shallowRef<GLTF>();
 
-  function createLayer(gltf: GLTF, height = 0, thickness = 10) {
+  function createLayer(height = 0, thickness = 10) {
+    if (!gltf.value) throw new Error("GLTF is undefined");
     const id = uuidv4();
 
     const layerService = new LayerService(
-      gltf,
+      gltf.value,
       height,
       thickness,
       layerWidth.value,
@@ -34,17 +36,13 @@ export const useLayerStore = defineStore("layer", () => {
     });
   }
 
-  function createEvenlySpacedLayers(
-    gltf: GLTF,
-    layerCount: number,
-    thickness: number
-  ) {
+  function createEvenlySpacedLayers(layerCount: number, thickness: number) {
     removeAllLayers();
 
     const separation = 100 / layerCount;
     for (let i = 0; i < layerCount; i++) {
       const height = Math.floor(separation * i);
-      createLayer(gltf, height, thickness);
+      createLayer(height, thickness);
     }
   }
 
@@ -151,6 +149,7 @@ export const useLayerStore = defineStore("layer", () => {
     shiftLayerOrder,
     getLayerIndex,
     getLayerService,
+    gltf,
     layers,
     layerWidth,
     layerHeight,

@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
-import type { Axis } from "../types";
+
+import type { Axis } from "@/types";
 
 export class CameraService {
   private cameraMode = ref<"perspective" | "orthographic">("perspective");

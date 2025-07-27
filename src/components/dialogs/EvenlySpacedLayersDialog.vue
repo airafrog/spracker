@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { Notify } from "quasar";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import { ref } from "vue";
 
 import { useLayerStore } from "@/stores";
 
 const model = defineModel<boolean>({ required: true });
-const props = defineProps<{
-  gltf: GLTF;
-}>();
 
 const layerStore = useLayerStore();
 const layerCount = ref(10);
 const layerThickness = ref(10);
 
 function handleCreate() {
-  layerStore.createEvenlySpacedLayers(
-    props.gltf,
-    layerCount.value,
-    layerThickness.value
-  );
+  layerStore.createEvenlySpacedLayers(layerCount.value, layerThickness.value);
   model.value = false;
 
   Notify.create({
