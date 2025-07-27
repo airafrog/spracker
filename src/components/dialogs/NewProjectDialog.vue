@@ -25,7 +25,12 @@ async function handleCreate() {
       child.material.needsUpdate = true;
     }
   });
+
   layerStore.gltf = gltf;
+  layerStore.projectName = projectName.value;
+  layerStore.layerWidth = 32;
+  layerStore.layerHeight = 32;
+  layerStore.removeAllLayers();
 
   Notify.create({
     type: "positive",

@@ -13,6 +13,7 @@ export const useLayerStore = defineStore("layer", () => {
   const layerWidth = ref(32);
   const layerHeight = ref(32);
   const gltf = shallowRef<GLTF>();
+  const projectName = ref("");
 
   function createLayer(height = 0, thickness = 10) {
     if (!gltf.value) throw new Error("GLTF is undefined");
@@ -153,6 +154,7 @@ export const useLayerStore = defineStore("layer", () => {
     layers,
     layerWidth,
     layerHeight,
+    projectName,
     removeAllLayers,
     removeLayer,
     setLayerHeight,
