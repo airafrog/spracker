@@ -40,7 +40,7 @@ async function handleCreate() {
   <q-dialog v-model="show">
     <q-card style="min-width: 30vw">
       <q-card-section class="q-mb-lg">
-        <h3>New Project</h3>
+        <h3 class="q-mb-sm">New Project</h3>
         <p>Spracker currently only supports .glb files</p>
 
         <q-input

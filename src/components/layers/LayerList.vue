@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import EvenlySpacedLayersDialog from "@/components/dialogs/EvenlySpacedLayersDialog.vue";
+import BatchLayersDialog from "@/components/dialogs/BatchLayersDialog.vue";
 import LayerSizeDialog from "@/components/dialogs/LayerSizeDialog.vue";
 import LayerCard from "@/components/layers/LayerCard.vue";
 import { useLayerStore } from "@/stores";
@@ -12,13 +12,13 @@ function handleCreateLayer() {
   layerStore.createLayer();
 }
 
-const showEvenlySpacedDialog = ref(false);
+const showBatchLayersDialog = ref(false);
 const showLayerSizeDialog = ref(false);
 </script>
 
 <template>
   <div class="full-height">
-    <evenly-spaced-layers-dialog v-model="showEvenlySpacedDialog" />
+    <batch-layers-dialog v-model="showBatchLayersDialog" />
     <layer-size-dialog v-model="showLayerSizeDialog" />
 
     <div class="column full-height">
@@ -28,7 +28,7 @@ const showLayerSizeDialog = ref(false);
           <q-btn
             flat
             icon="fas fa-layer-group"
-            @click="showEvenlySpacedDialog = true"
+            @click="showBatchLayersDialog = true"
           />
           <q-btn
             flat

@@ -27,11 +27,14 @@ function handleDelete() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <h3>Delete Layer</h3>
-      </q-card-section>
-
-      <q-card-section>
-        <p>Are you sure you want to delete "{{ props.layer.name }}"?</p>
+        <h3 class="q-mb-sm">Delete Layer</h3>
+        <p>
+          Are you sure you want to
+          <span class="text-negative">DELETE</span> layer "<span
+            class="text-info"
+            >{{ props.layer.name }}</span
+          >"?
+        </p>
       </q-card-section>
 
       <q-card-actions align="right">

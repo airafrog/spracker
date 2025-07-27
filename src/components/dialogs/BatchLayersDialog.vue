@@ -26,12 +26,12 @@ function handleCreate() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <h3>Batch Layers</h3>
+        <h3 class="q-mb-sm">Batch Layers</h3>
         <p>
           Create numerous evenly spaced layers at once. This will
           <span class="text-negative">DELETE</span> all existing layers!
         </p>
-        <p></p>
+
         <div class="flex q-gutter-x-md">
           <q-input
             v-model="layerCount"

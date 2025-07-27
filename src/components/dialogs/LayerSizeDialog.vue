@@ -27,8 +27,9 @@ function handleSetLayerSize() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <h3>Layer Size</h3>
-        <p>Change the width and depth of all layers</p>
+        <h3 class="q-mb-sm">Layer Size</h3>
+        <p>Change the width and depth of all layer sprites</p>
+
         <div class="flex q-gutter-x-md">
           <q-input
             v-model="newLayerWidth"
