@@ -33,7 +33,7 @@ const showNewProjectDialog = ref(false);
 
     <div class="row reverse">
       <div class="col-12 col-md-6 q-pa-xl">
-        <q-img src="/images/cowboy-time.png" />
+        <q-img src="/images/cowboy-time.png" class="rounded-borders" />
       </div>
 
       <div class="col-12 col-md-6 q-pa-xl">
@@ -55,7 +55,7 @@ const showNewProjectDialog = ref(false);
 
     <div class="row reverse">
       <div class="col-12 col-md-6 q-pa-xl">
-        <q-img src="/images/cowboy-time.png" />
+        <q-img src="/images/cowboy-time.png" class="rounded-borders" />
       </div>
 
       <div class="col-12 col-md-6 q-pa-xl">
