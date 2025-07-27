@@ -28,9 +28,6 @@ function handleSetLayerSize() {
     <q-card>
       <q-card-section>
         <h3>Layer Size</h3>
-      </q-card-section>
-
-      <q-card-section>
         <p>Change the width and depth of all layers</p>
         <div class="flex q-gutter-x-md">
           <q-input

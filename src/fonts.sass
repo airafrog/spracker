@@ -7,13 +7,6 @@
   descent-override: 30%
   -webkit-font-smoothing: none
   -moz-osx-font-smoothing: grayscale
-  
-html,
-body
-  font-family: "Bitty", sans-serif !important
-  font-style: normal;
-  font-size: 16px
-  line-height: 0.8
 
 $h1: 256px
 $h2: 128px
@@ -23,9 +16,10 @@ $h5: 64px
 $h6: 64px
 $paragraph: 32px
 $input: 32px
-$icon: 32px
+$icon: 0.75em
 
 h1, h2, h3, h4, h5, h6
+  font-family: "Bitty", sans-serif
   margin: 0
 
 h1
@@ -56,19 +50,18 @@ h6
     font-size: 32px
 
 
-p,
-span,
-div,
-label
+// QUASAR SPECIFIC STYLES
+.q-toolbar__title
+  font-family: "Bitty", sans-serif
+  font-size: 48px
+  line-height: 0.6
+
+p, .q-field__native
+  font-family: "Bitty", sans-serif
   font-size: $paragraph
   line-height: 0.6
 
-input,
-select,
-textarea,
-.q-field__label
-  font-size: $input !important
-
-// Keep icons at reasonable size
-.q-icon, [class*="fa-"], [class*="material-"], [class*="mdi-"]
-  font-size: $icon !important
+.q-btn__content span
+  font-family: "Bitty", sans-serif
+  font-size: 32px !important
+  line-height: 0.6

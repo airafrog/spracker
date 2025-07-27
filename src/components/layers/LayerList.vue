@@ -19,13 +19,17 @@ const showLayerSizeDialog = ref(false);
 <template>
   <div class="full-height">
     <evenly-spaced-layers-dialog v-model="showEvenlySpacedDialog" />
-
     <layer-size-dialog v-model="showLayerSizeDialog" />
 
     <div class="column full-height">
       <div class="col-auto">
         <q-toolbar class="bg-primary">
-          <q-toolbar-title class="q-mr-auto">Layers</q-toolbar-title>
+          <q-btn flat icon="fas fa-plus" @click="handleCreateLayer" />
+          <q-btn
+            flat
+            icon="fas fa-layer-group"
+            @click="showEvenlySpacedDialog = true"
+          />
           <q-btn
             flat
             icon="photo_size_select_large"
@@ -33,12 +37,6 @@ const showLayerSizeDialog = ref(false);
             no-caps
             @click="showLayerSizeDialog = true"
           />
-          <q-btn
-            flat
-            icon="fas fa-layer-group"
-            @click="showEvenlySpacedDialog = true"
-          />
-          <q-btn flat icon="fas fa-plus" @click="handleCreateLayer" />
         </q-toolbar>
       </div>
 

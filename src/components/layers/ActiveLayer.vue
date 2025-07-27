@@ -77,7 +77,7 @@ function handleSetOrder(value: number | string | null) {
         </q-toolbar>
 
         <div class="q-px-lg q-py-md">
-          <label>Height:</label>
+          <p class="q-ma-none">Height:</p>
           <q-slider
             :model-value="props.layer.height"
             :step="1"
@@ -88,7 +88,7 @@ function handleSetOrder(value: number | string | null) {
             @update:model-value="handleHeightUpdate"
           />
 
-          <label>Thickness:</label>
+          <p class="q-ma-none">Thickness:</p>
           <q-slider
             :model-value="props.layer.thickness"
             :step="1"

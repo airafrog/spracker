@@ -56,7 +56,7 @@ function handleOrderShift(delta: number) {
       </div>
 
       <div class="col column justify-center">
-        <span>{{ props.layer.name }}</span>
+        <p class="q-ma-none">{{ props.layer.name }}</p>
       </div>
 
       <div class="col-auto">
