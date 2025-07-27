@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Bitty';
+    src: url('Bitty.woff2') format('woff2'),
+        url('Bitty.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+

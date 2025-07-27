@@ -27,7 +27,7 @@ function handleSetLayerSize() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Layer Size</div>
+        <h3>Layer Size</h3>
       </q-card-section>
 
       <q-card-section>

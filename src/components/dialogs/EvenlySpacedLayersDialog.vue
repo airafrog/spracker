@@ -26,7 +26,7 @@ function handleCreate() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Create Evenly Spaced Layers</div>
+        <h3>Create Evenly Spaced Layers</h3>
       </q-card-section>
 
       <q-card-section>

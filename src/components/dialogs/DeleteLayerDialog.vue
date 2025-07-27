@@ -27,7 +27,7 @@ function handleDelete() {
   <q-dialog v-model="model">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Delete Layer</div>
+        <h3>Delete Layer</h3>
       </q-card-section>
 
       <q-card-section>

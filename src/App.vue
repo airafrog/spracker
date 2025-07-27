@@ -18,10 +18,9 @@ const layerStore = useLayerStore();
   </div>
 </template>
 
-<style>
+<style lang="sass">
 html,
-body {
-  padding: 0;
-  margin: 0;
-}
+body
+  padding: 0
+  margin: 0
 </style>

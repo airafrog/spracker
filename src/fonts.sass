@@ -1,0 +1,60 @@
+@font-face
+  font-family: "Bitty"
+  src: url("/fonts/bitty/Bitty.woff2") format("woff2"), url("/fonts/bitty/Bitty.woff") format("woff")
+  font-style: normal
+  font-display: swap
+  font-weight: 500
+  descent-override: 30%
+  -webkit-font-smoothing: none
+  -moz-osx-font-smoothing: grayscale
+  
+html,
+body
+  font-family: "Bitty", sans-serif !important
+  font-style: normal;
+  font-size: 16px
+  line-height: 0.8
+
+$h1: 256px
+$h2: 128px
+$h3: 96px
+$h4: 64px
+$h5: 64px
+$h6: 64px
+$paragraph: 32px
+$input: 32px
+$icon: 32px
+
+h1, h2, h3, h4, h5, h6
+  margin: 0
+
+h1
+  font-size: $h1
+
+h2
+  font-size: $h2
+
+h3
+  font-size: $h3
+
+h4,
+h5,
+h6
+  font-size: $h4
+
+p,
+span,
+div,
+label
+  font-size: $paragraph
+  line-height: 0.6
+
+input,
+select,
+textarea,
+.q-field__label
+  font-size: $input !important
+
+// Keep icons at reasonable size
+.q-icon, [class*="fa-"], [class*="material-"], [class*="mdi-"]
+  font-size: $icon !important

@@ -39,11 +39,8 @@ async function handleCreate() {
 <template>
   <q-dialog v-model="show">
     <q-card style="min-width: 30vw">
-      <q-card-section>
-        <div class="text-h6">New Project</div>
-      </q-card-section>
-
       <q-card-section class="q-mb-lg">
+        <h3>New Project</h3>
         <p>Spracker currently only supports .glb files</p>
 
         <q-input

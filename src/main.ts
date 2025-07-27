@@ -11,7 +11,7 @@ import "@quasar/extras/fontawesome-v6/fontawesome-v6.css";
 import "quasar/src/css/index.sass";
 
 // Custom
-import "./fonts.css";
+import "./fonts.sass";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
