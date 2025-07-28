@@ -46,7 +46,10 @@ async function handleCreate() {
     <q-card style="min-width: 30vw">
       <q-card-section class="q-mb-lg">
         <h3 class="q-mb-sm">New Project</h3>
-        <p>Spracker currently only supports .glb files</p>
+        <p>
+          Spracker currently only supports
+          <span class="text-info">.glb</span> files
+        </p>
 
         <q-input
           v-model="projectName"

@@ -11,6 +11,9 @@ importers:
       '@quasar/extras':
         specifier: ^1.17.0
         version: 1.17.0
+      client-zip:
+        specifier: ^2.5.0
+        version: 2.5.0
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
@@ -468,6 +471,9 @@ packages:
 
   buffer-builder@0.2.0:
     resolution: {integrity: sha512-7VPMEPuYznPSoR21NE1zvd2Xna6c/CloiZCfcMXR1Jny6PjX0N4Nsa38zcBFo/FMK+BlA+FLKbJCQ0i2yxp+Xg==}
+
+  client-zip@2.5.0:
+    resolution: {integrity: sha512-ydG4nDZesbFurnNq0VVCp/yyomIBh+X/1fZPI/P24zbnG4dtC4tQAfI5uQsomigsUMeiRO2wiTPizLWQh+IAyQ==}
 
   colorjs.io@0.5.2:
     resolution: {integrity: sha512-twmVoizEW7ylZSN32OgKdXRmo1qg+wT5/6C3xu5b9QsWzSFAhHLn2xd8ro0diCsKfCj1RdaTP/nrcW+vAoQPIw==}
@@ -1138,6 +1144,8 @@ snapshots:
       balanced-match: 1.0.2
 
   buffer-builder@0.2.0: {}
+
+  client-zip@2.5.0: {}
 
   colorjs.io@0.5.2: {}
 

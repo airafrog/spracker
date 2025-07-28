@@ -14,7 +14,6 @@ const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
-const stackGroup = new THREE.Group();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
@@ -29,9 +28,10 @@ function createStack() {
     const layerMesh = layerService.getMesh();
     layerMesh.position.set(0, separation * i, 0);
     layerMesh.rotation.x = -Math.PI / 2; // Rotate to face up
-    stackGroup.add(layerMesh);
+    layerStore.stackGroup.add(layerMesh);
   });
 }
+
 watch(
   [
     () => layerStore.layers.map((layer) => layer.id),
@@ -39,7 +39,7 @@ watch(
     () => layerStore.layerHeight,
   ],
   () => {
-    stackGroup.clear();
+    layerStore.stackGroup.clear();
     createStack();
   },
   { immediate: true }
@@ -65,7 +65,7 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
-  scene.add(stackGroup);
+  scene.add(layerStore.stackGroup);
 
   function animate() {
     cameraService.animate();

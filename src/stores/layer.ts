@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import type { GLTF } from "three/examples/jsm/Addons.js";
+import * as THREE from "three";
 import { v4 as uuidv4 } from "uuid";
 import { ref, shallowRef } from "vue";
 
@@ -13,6 +14,7 @@ export const useLayerStore = defineStore("layer", () => {
   const layerWidth = ref(32);
   const layerHeight = ref(32);
   const gltf = shallowRef<GLTF>();
+  const stackGroup = shallowRef(new THREE.Group());
   const projectName = ref("");
 
   function createLayer(height = 0, thickness = 10) {
@@ -146,8 +148,6 @@ export const useLayerStore = defineStore("layer", () => {
     activeLayer,
     createEvenlySpacedLayers,
     createLayer,
-    setLayerOrder,
-    shiftLayerOrder,
     getLayerIndex,
     getLayerService,
     gltf,
@@ -161,5 +161,8 @@ export const useLayerStore = defineStore("layer", () => {
     setLayerName,
     setLayerSize,
     setLayerThickness,
+    setLayerOrder,
+    shiftLayerOrder,
+    stackGroup,
   };
 });
