@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
 import { gltfService } from "@/services/gltf";
+import { blobService } from "@/services/blob";
 import { useLayerStore } from "@/stores";
 
 const layerStore = useLayerStore();
@@ -19,18 +20,12 @@ async function handleSaveProject() {
     layers: layerStore.layers,
     glb: new Uint8Array(glb),
   };
+
   const blob = new Blob([JSON.stringify(fileContent)], {
     type: "application/json",
   });
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${layerStore.projectName}.sprack`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  blobService.downloadBlob(blob, `${layerStore.projectName}.sprack`);
 }
 
 async function handle3dExport(binary: boolean) {
@@ -45,14 +40,7 @@ async function handle3dExport(binary: boolean) {
     ? `${layerStore.projectName}.glb`
     : `${layerStore.projectName}.gltf`;
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  blobService.downloadBlob(blob, fileName);
 }
 
 async function handlePngExport() {
@@ -61,18 +49,14 @@ async function handlePngExport() {
     fetch(dataUrl).then((response) => response.blob())
   );
   const canvasBlobs = await Promise.all(canvasBlobPromises);
+
   const files = canvasBlobs.map(
     (blob, index) =>
       new File([blob], `layer-${index + 1}.png`, { type: "image/png" })
   );
-  const zipBlob = await downloadZip(files).blob();
 
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(zipBlob);
-  link.download = "test.zip";
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(link.href);
+  const zipBlob = await downloadZip(files).blob();
+  blobService.downloadBlob(zipBlob, `${layerStore.projectName}.zip`);
 }
 </script>
 
