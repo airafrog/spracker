@@ -33,29 +33,7 @@ const showNewProjectDialog = ref(false);
 
     <div class="row reverse">
       <div class="col-12 col-md-6 q-pa-xl">
-        <q-img src="/images/cowboy-time.png" class="rounded-borders" />
-      </div>
-
-      <div class="col-12 col-md-6 q-pa-xl">
-        <h2 class="q-mb-md">What is it?</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-      </div>
-    </div>
-
-    <div class="row reverse">
-      <div class="col-12 col-md-6 q-pa-xl">
-        <q-img src="/images/cowboy-time.png" class="rounded-borders" />
+        <q-img src="/images/example-car.png" class="rounded-borders" />
       </div>
 
       <div class="col-12 col-md-6 q-pa-xl">
