@@ -9,6 +9,30 @@ import { useLayerStore } from "@/stores";
 const layerStore = useLayerStore();
 const showNewProjectDialog = ref(false);
 
+async function handleSaveProject() {
+  if (!layerStore.gltf) throw new Error("No GLTF data available to save");
+  const glb = await gltfService.export(layerStore.gltf.scene, true);
+  if (!(glb instanceof ArrayBuffer)) throw new Error("Wrong type");
+
+  const fileContent = {
+    projectName: layerStore.projectName,
+    layers: layerStore.layers,
+    glb: new Uint8Array(glb),
+  };
+  const blob = new Blob([JSON.stringify(fileContent)], {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${layerStore.projectName}.sprack`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 async function handle3dExport(binary: boolean) {
   const output = await gltfService.export(layerStore.stackGroup, binary);
   const isArrayBuffer = output instanceof ArrayBuffer;
@@ -71,7 +95,7 @@ async function handlePngExport() {
             >
               <q-item-section>New Project</q-item-section>
             </q-item>
-            <q-item clickable v-close-popup>
+            <q-item clickable v-close-popup @click="handleSaveProject">
               <q-item-section>Save Project</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
@@ -87,14 +111,18 @@ async function handlePngExport() {
               </q-item-section>
 
               <q-menu anchor="top end" self="top start">
-                <q-list>
-                  <q-item dense clickable @click="handle3dExport(false)">
+                <q-list dense>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="handle3dExport(false)"
+                  >
                     <q-item-section>.gltf</q-item-section>
                   </q-item>
-                  <q-item dense clickable @click="handle3dExport(true)">
+                  <q-item clickable v-close-popup @click="handle3dExport(true)">
                     <q-item-section>.glb</q-item-section>
                   </q-item>
-                  <q-item dense clickable @click="handlePngExport">
+                  <q-item clickable v-close-popup @click="handlePngExport">
                     <q-item-section>.png(s)</q-item-section>
                   </q-item>
                 </q-list>
