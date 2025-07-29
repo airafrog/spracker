@@ -22,7 +22,7 @@ const props = withDefaults(
           :ratio="20 / 9"
           caption="hi"
         />
-        <p class="text-accent">{{ props.caption }}</p>
+        <p v-if="props.caption" class="text-accent">{{ props.caption }}</p>
       </div>
 
       <div class="col-12 col-md-6">
