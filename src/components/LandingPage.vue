@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+import ContentImageRow from "@/components/ContentImageRow.vue";
 import LandingScene from "@/components/scenes/LandingScene.vue";
 import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
 
@@ -38,33 +39,55 @@ const showNewProjectDialog = ref(false);
       </div>
     </div>
 
-    <div class="q-mt-xl" style="padding: 0 10vw">
-      <div class="row reverse q-col-gutter-lg">
-        <div class="col-12 col-md-6">
-          <q-img src="/images/example-car.png" class="rounded-borders" />
-        </div>
+    <div class="q-my-xl" style="padding: 0 10vw">
+      <content-image-row src="/images/example-car.png" reverse>
+        <h2 class="q-mb-md">What is it?</h2>
+        <p>
+          Spracker is a tool that generates sprite stacks from 3D models.
+          Creating sprite-stacked assets can be a time consuming task. Spracker
+          aims to streamline the process by providing a quick way to convert
+          your existing 3D assets!
+        </p>
+        <p>
+          Spracker is NOT an image editing tool. Stacks will often require some
+          manual adjustment to achieve perfection! Think of it as a starting
+          point for your creative process.
+        </p>
+        <p>
+          Spracker features a reactive interface for creating stacks. This
+          includes importing GLTF models, managing layers, and exporting to
+          GLTF, GLB, or PNGs!
+        </p>
+      </content-image-row>
 
-        <div class="col-12 col-md-6">
-          <h2 class="q-mb-md">What is it?</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-        </div>
-      </div>
+      <content-image-row
+        src="/images/example-game.png"
+        caption='"game" by developer'
+      >
+        <h2 class="q-mb-md">Why stack sprites?</h2>
+        <p>
+          Good question! For many developers it's an easy way to create a
+          3D-style game while using a 2D game engine. However, this technique
+          has a rather unique style that many find pleasing and fun! Some
+          developers even create sprite stacked games by layering 3D planes in a
+          3D engine.
+        </p>
+        <p>
+          Whether or not you should use this technique is up to you! Stacking
+          sprites can be a fun way to achieve a unique visual style, but can
+          also add limitations to your project. It's important to weigh the pros
+          and cons before deciding on your approach.
+        </p>
+      </content-image-row>
+
+      <content-image-row src="/images/example-car.png" reverse>
+        <h2 class="q-mb-md">Open source</h2>
+        <p>
+          Spracker is open source and free to use! It is licensed under the MIT
+          License, which means you can use it in your personal and commercial
+          projects without any restrictions.
+        </p>
+      </content-image-row>
     </div>
   </div>
 </template>
-
-<style scoped lang="sass">
-.content-area
-  padding: 1em 15vw
-</style>
