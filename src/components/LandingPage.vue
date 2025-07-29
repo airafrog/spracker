@@ -53,11 +53,6 @@ const showNewProjectDialog = ref(false);
           manual adjustment to achieve perfection! Think of it as a starting
           point for your creative process.
         </p>
-        <p>
-          Spracker features a reactive interface for creating stacks. This
-          includes importing GLTF models, managing layers, and exporting to
-          GLTF, GLB, or PNGs!
-        </p>
       </content-image-row>
 
       <content-image-row
