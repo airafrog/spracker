@@ -2,7 +2,7 @@
 import { useQuasar } from "quasar";
 
 import TheEditor from "@/components/TheEditor.vue";
-import HomePage from "@/components/HomePage.vue";
+import LandingPage from "@/components/LandingPage.vue";
 import { useLayerStore } from "@/stores";
 
 const $q = useQuasar();
@@ -14,7 +14,7 @@ const layerStore = useLayerStore();
 <template>
   <div class="window-height">
     <the-editor v-if="layerStore.gltf" />
-    <home-page v-else />
+    <landing-page v-else />
   </div>
 </template>
 
