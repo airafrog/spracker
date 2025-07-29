@@ -24,19 +24,22 @@ const showLayerSizeDialog = ref(false);
     <div class="column full-height">
       <div class="col-auto">
         <q-toolbar class="bg-primary toolbar-border">
-          <q-btn flat icon="fas fa-plus" @click="handleCreateLayer" />
+          <q-space />
           <q-btn
             flat
-            icon="fas fa-layer-group"
-            @click="showBatchLayersDialog = true"
-          />
-          <q-btn
-            flat
-            icon="photo_size_select_large"
             :label="`${layerStore.layerWidth}x${layerStore.layerHeight}`"
+            icon="photo_size_select_large"
             no-caps
+            stretch
             @click="showLayerSizeDialog = true"
           />
+          <q-btn
+            icon="fas fa-layer-group"
+            flat
+            stretch
+            @click="showBatchLayersDialog = true"
+          />
+          <q-btn icon="fas fa-plus" flat stretch @click="handleCreateLayer" />
         </q-toolbar>
       </div>
 

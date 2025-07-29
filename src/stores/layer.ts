@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import { v4 as uuidv4 } from "uuid";
-import { ref, shallowRef } from "vue";
+import { computed, ref, shallowRef } from "vue";
 
 import { LayerService } from "@/services/layer";
 import type { Layer } from "@/types";
@@ -13,9 +13,18 @@ export const useLayerStore = defineStore("layer", () => {
   const layerServices: { [id: string]: LayerService } = {};
   const layerWidth = ref(32);
   const layerHeight = ref(32);
-  const gltf = shallowRef<GLTF>();
   const stackGroup = shallowRef(new THREE.Group());
   const projectName = ref("");
+
+  const gltf = shallowRef<GLTF>();
+  const gltfBox = new THREE.Box3();
+  const gltfSizeVector = new THREE.Vector3();
+  const gltfSize = computed(() => {
+    if (!gltf.value) return new THREE.Vector3(0, 0, 0);
+    gltfBox.setFromObject(gltf.value.scene);
+    gltfBox.getSize(gltfSizeVector);
+    return gltfSizeVector;
+  });
 
   function createLayer(height = 0, thickness = 10) {
     if (!gltf.value) throw new Error("GLTF is undefined");
@@ -151,6 +160,7 @@ export const useLayerStore = defineStore("layer", () => {
     getLayerIndex,
     getLayerService,
     gltf,
+    gltfSize,
     layers,
     layerWidth,
     layerHeight,

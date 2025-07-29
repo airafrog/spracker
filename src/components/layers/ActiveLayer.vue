@@ -67,11 +67,13 @@ function handleSetOrder(value: number | string | null) {
             class="q-ml-auto"
             icon="fas fa-trash"
             flat
+            stretch
             @click="showDeleteDialog = true"
           />
           <q-btn
             icon="fas fa-close"
             flat
+            stretch
             @click="layerStore.activeLayer = null"
           />
         </q-toolbar>
