@@ -23,7 +23,7 @@ const showLayerSizeDialog = ref(false);
 
     <div class="column full-height">
       <div class="col-auto">
-        <q-toolbar class="bg-primary">
+        <q-toolbar class="bg-primary toolbar-border">
           <q-btn flat icon="fas fa-plus" @click="handleCreateLayer" />
           <q-btn
             flat
@@ -72,6 +72,10 @@ const showLayerSizeDialog = ref(false);
 </template>
 
 <style scoped lang="scss">
+.toolbar-border {
+  border-top: 2px solid $dark-page;
+}
+
 .layer-card {
   padding: 0.5em;
   border-radius: 0.5em;

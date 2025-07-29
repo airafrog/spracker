@@ -67,6 +67,7 @@ async function handlePngExport() {
     <q-toolbar class="bg-primary">
       <h4 class="q-mr-xl">{{ layerStore.projectName }}</h4>
 
+      <q-space />
       <q-separator dark vertical />
 
       <q-btn stretch flat label="File" no-caps>
