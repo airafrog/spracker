@@ -56,8 +56,8 @@ const showNewProjectDialog = ref(false);
       </content-image-row>
 
       <content-image-row
-        src="/images/example-game.png"
-        caption='"game" by developer'
+        src="/images/fauxton3d.png"
+        caption='"Fauxton 3D" by Gizmo199'
       >
         <h2 class="q-mb-md">Why stack sprites?</h2>
         <p>
