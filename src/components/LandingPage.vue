@@ -88,7 +88,7 @@ const showNewProjectDialog = ref(false);
           color="accent"
           icon="fab fa-github"
           label="View on GitHub"
-          to="https://github.com/your-repo/spracker"
+          to="https://github.com/airafrog/spracker"
         />
       </content-image-row>
     </div>

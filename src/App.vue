@@ -12,7 +12,7 @@ const layerStore = useLayerStore();
 </script>
 
 <template>
-  <div style="min-height: 100vh">
+  <div class="window-height">
     <the-editor v-if="layerStore.gltf" />
     <landing-page v-else />
   </div>
