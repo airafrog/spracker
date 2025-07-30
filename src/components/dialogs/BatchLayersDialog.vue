@@ -3,6 +3,7 @@ import { Notify } from "quasar";
 import { ref } from "vue";
 
 import { useLayerStore } from "@/stores";
+import * as Rules from "@/utils/quasar";
 
 const model = defineModel<boolean>({ required: true });
 
@@ -25,36 +26,43 @@ function handleCreate() {
 <template>
   <q-dialog v-model="model">
     <q-card>
-      <q-card-section>
-        <h3 class="q-mb-sm">Batch Layers</h3>
-        <p>
-          Create numerous evenly spaced layers at once. This will
-          <span class="text-negative">DELETE</span> all existing layers!
-        </p>
+      <q-form @submit="handleCreate">
+        <q-card-section>
+          <h3 class="q-mb-sm">Batch Layers</h3>
+          <p>
+            Create numerous evenly spaced layers at once. This will
+            <span class="text-negative">DELETE</span> all existing layers!
+          </p>
 
-        <div class="flex q-gutter-x-md">
-          <q-input
-            v-model="layerCount"
-            type="number"
-            label="Number of Layers"
-            min="1"
-            filled
-          />
-          <q-input
-            v-model="layerThickness"
-            type="number"
-            label="Layer Thickness"
-            min="1"
-            suffix="%"
-            filled
-          />
-        </div>
-      </q-card-section>
+          <div class="flex q-gutter-x-md">
+            <q-input
+              v-model.number="layerCount"
+              :rules="[
+                Rules.required(),
+                Rules.gt(0),
+                Rules.lt(9999),
+                Rules.int(),
+              ]"
+              type="number"
+              label="Number of Layers"
+              filled
+            />
+            <q-input
+              v-model.number="layerThickness"
+              :rules="[Rules.required(), Rules.gt(0), Rules.lte(100)]"
+              type="number"
+              label="Layer Thickness"
+              suffix="%"
+              filled
+            />
+          </div>
+        </q-card-section>
 
-      <q-card-actions align="right">
-        <q-btn label="Cancel" flat v-close-popup />
-        <q-btn color="primary" label="Create" @click="handleCreate" />
-      </q-card-actions>
+        <q-card-actions align="right">
+          <q-btn label="Cancel" flat v-close-popup />
+          <q-btn type="submit" color="primary" label="Create" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>

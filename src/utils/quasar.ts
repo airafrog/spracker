@@ -1,7 +1,7 @@
-export function required(fieldName: string) {
+export function required() {
   return (val: string) => {
     if (typeof val === "string") val = val.trim();
-    if (!val) return `"${fieldName}" is required`;
+    if (!val) return "Required";
     return true;
   };
 }
@@ -45,5 +45,12 @@ export function maxLength(max: number) {
   return (val: string) => {
     if (typeof val === "string" && val.length <= max) return true;
     return `Value must be at most ${max} characters long`;
+  };
+}
+
+export function int() {
+  return (val: number) => {
+    if (Number.isInteger(val)) return true;
+    return "Value must be an integer";
   };
 }

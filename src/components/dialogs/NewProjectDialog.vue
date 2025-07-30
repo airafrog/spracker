@@ -5,7 +5,7 @@ import { ref, shallowRef } from "vue";
 
 import { gltfService } from "@/services/gltf";
 import { useLayerStore } from "@/stores";
-import { required } from "@/utils/quasar";
+import * as Rules from "@/utils/quasar";
 
 const show = defineModel<boolean>({ required: true });
 
@@ -56,7 +56,7 @@ async function handleCreate() {
 
           <q-input
             v-model="projectName"
-            :rules="[required('Project Name')]"
+            :rules="[Rules.required(), Rules.maxLength(20)]"
             label="Project Name"
             filled
             class="q-mb-md"
@@ -64,7 +64,7 @@ async function handleCreate() {
 
           <q-file
             v-model="file"
-            :rules="[required('GLB File')]"
+            :rules="[Rules.required()]"
             label="GLB File"
             accept=".glb"
             filled
