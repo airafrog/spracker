@@ -3,11 +3,13 @@ const props = withDefaults(
   defineProps<{
     src: string;
     caption?: string;
+    ratio?: number;
     reverse?: boolean;
   }>(),
   {
-    reverse: false,
     caption: "",
+    ratio: undefined,
+    reverse: false,
   }
 );
 </script>
@@ -19,7 +21,7 @@ const props = withDefaults(
         <q-img
           :src="props.src"
           class="rounded-borders"
-          :ratio="20 / 9"
+          :ratio="props.ratio"
           caption="hi"
         />
         <p v-if="props.caption" class="text-accent">{{ props.caption }}</p>

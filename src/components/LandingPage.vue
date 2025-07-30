@@ -58,6 +58,7 @@ const showNewProjectDialog = ref(false);
       <content-image-row
         src="/images/fauxton3d.png"
         caption='"Fauxton 3D" by Gizmo199'
+        :ratio="19 / 9"
       >
         <h2 class="q-mb-md">Why stack sprites?</h2>
         <p>
@@ -75,13 +76,20 @@ const showNewProjectDialog = ref(false);
         </p>
       </content-image-row>
 
-      <content-image-row src="/images/example-car.png" reverse>
+      <content-image-row src="/images/example-car.png" :ratio="19 / 9" reverse>
         <h2 class="q-mb-md">Open source</h2>
         <p>
-          Spracker is open source and free to use! It is licensed under the MIT
-          License, which means you can use it in your personal and commercial
-          projects without any restrictions.
+          Spracker is open source and completely free to use! It is licensed
+          under the GPLv3 license, which means you can use it in your personal
+          and commercial projects as long as you adhere to the terms of the
+          license.
         </p>
+        <q-btn
+          color="accent"
+          icon="fab fa-github"
+          label="View on GitHub"
+          to="https://github.com/your-repo/spracker"
+        />
       </content-image-row>
     </div>
   </div>
