@@ -19,7 +19,8 @@
     "sst": "3.17.10",
     "three": "^0.178.0",
     "uuid": "^11.1.0",
-    "vue": "^3.5.17"
+    "vue": "^3.5.17",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.9.0",

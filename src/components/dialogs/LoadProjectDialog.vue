@@ -4,8 +4,9 @@ import { shallowRef } from "vue";
 
 import { gltfService } from "@/services/gltf";
 import { useLayerStore } from "@/stores";
-import * as Rules from "@/utils/quasar";
 import type { Layer } from "@/types";
+import { zSprackFile } from "@/types";
+import * as Rules from "@/utils/quasar";
 
 const show = defineModel<boolean>({ required: true });
 
@@ -19,34 +20,26 @@ async function handleLoad() {
     if (!file.value) throw new Error("File is not defined");
     const fileContent = await file.value.text();
     const fileJson = JSON.parse(fileContent);
+    const sprackFile = zSprackFile.parse(fileJson);
 
-    if (!("projectName" in fileJson))
-      throw new Error("File missing project name");
-    if (!("glb" in fileJson)) throw new Error("File missing glb data");
-    if (!("layers" in fileJson)) throw new Error("File missing layer data");
-    if (!("layerWidth" in fileJson))
-      throw new Error("File missing layer width");
-    if (!("layerHeight" in fileJson))
-      throw new Error("File missing layer height");
-
-    // Convert the serialized Uint8Array back to proper binary data
-    const glbData = Object.values(fileJson.glb) as number[];
+    // Convert the serialized GLB to a buffer for three.js
+    const glbData = Object.values(sprackFile.glb) as number[];
     const glbArrayBuffer = new Uint8Array(glbData).buffer;
     const glbBlob = new Blob([glbArrayBuffer], { type: "model/gltf-binary" });
     const glbBlobUrl = URL.createObjectURL(glbBlob);
     const gltf = await gltfService.load(glbBlobUrl);
 
+    layerStore.projectName = sprackFile.projectName;
+    layerStore.layerWidth = sprackFile.layerWidth;
+    layerStore.layerHeight = sprackFile.layerHeight;
     layerStore.gltf = gltf;
-    layerStore.layerWidth = fileJson.layerWidth;
-    layerStore.layerHeight = fileJson.layerHeight;
-    fileJson.layers.forEach((layer: Layer) => {
+    sprackFile.layers.forEach((layer: Layer) => {
       layerStore.createLayer(layer.height, layer.thickness, layer.name);
     });
-    layerStore.projectName = fileJson.projectName;
 
     Notify.create({
       type: "positive",
-      message: `Project "${fileJson.projectName}" loaded successfully!`,
+      message: `Project "${sprackFile.projectName}" loaded successfully!`,
     });
 
     show.value = false;
