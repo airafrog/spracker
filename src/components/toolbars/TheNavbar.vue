@@ -122,6 +122,7 @@ async function handlePngExport() {
       <q-btn
         href="https://github.com/airafrog/spracker"
         icon="fab fa-github"
+        target="_blank"
         stretch
         flat
       />

@@ -29,4 +29,26 @@ canvas {
   image-rendering: pixelated !important;
   image-rendering: crisp-edges !important;
 }
+
+/* Scrollbar */
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0c0c0c;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cdcdcd;
+  border-radius: 0.5em;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #f1f1f1;
+}
 </style>

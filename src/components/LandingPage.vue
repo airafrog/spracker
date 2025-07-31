@@ -89,6 +89,7 @@ const showNewProjectDialog = ref(false);
           color="accent"
           icon="fab fa-github"
           label="View on GitHub"
+          target="_blank"
         />
       </content-image-row>
     </div>
