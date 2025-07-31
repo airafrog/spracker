@@ -30,11 +30,11 @@ async function handleCreate() {
     }
   });
 
-  layerStore.gltf = gltf;
+  layerStore.removeAllLayers();
   layerStore.projectName = projectName.value;
   layerStore.layerWidth = 32;
   layerStore.layerHeight = 32;
-  layerStore.removeAllLayers();
+  layerStore.gltf = gltf;
 
   Notify.create({
     type: "positive",
