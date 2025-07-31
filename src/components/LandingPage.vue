@@ -9,7 +9,7 @@ const showNewProjectDialog = ref(false);
 </script>
 
 <template>
-  <div class="full-height">
+  <div>
     <new-project-dialog v-model="showNewProjectDialog" />
 
     <div style="height: 75vh">
@@ -39,7 +39,7 @@ const showNewProjectDialog = ref(false);
       </div>
     </div>
 
-    <div class="q-my-xl" style="padding: 0 10vw">
+    <div style="padding: 5em 10vw">
       <content-image-row src="/images/example-car.png" reverse>
         <h2 class="q-mb-md">What is it?</h2>
         <p>
@@ -76,7 +76,7 @@ const showNewProjectDialog = ref(false);
         </p>
       </content-image-row>
 
-      <content-image-row src="/images/example-car.png" :ratio="19 / 9" reverse>
+      <content-image-row src="/images/open-source.png" :ratio="19 / 9" reverse>
         <h2 class="q-mb-md">Open source</h2>
         <p>
           Spracker is open source and completely free to use! It is licensed
@@ -93,5 +93,17 @@ const showNewProjectDialog = ref(false);
         />
       </content-image-row>
     </div>
+
+    <q-toolbar class="bg-black">
+      <q-btn
+        href="https://github.com/airafrog/spracker"
+        icon="fab fa-github"
+        label="Spracker"
+        target="_blank"
+        stretch
+        no-caps
+        flat
+      />
+    </q-toolbar>
   </div>
 </template>
