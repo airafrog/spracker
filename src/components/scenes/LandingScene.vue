@@ -77,7 +77,5 @@ onUnmounted(() => {
 canvas {
   width: 100% !important;
   height: 100% !important;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 </style>

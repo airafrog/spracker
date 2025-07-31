@@ -18,9 +18,15 @@ const layerStore = useLayerStore();
   </div>
 </template>
 
-<style lang="sass">
+<style>
 html,
-body
-  padding: 0
-  margin: 0
+body {
+  padding: 0;
+  margin: 0;
+}
+
+canvas {
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+}
 </style>
