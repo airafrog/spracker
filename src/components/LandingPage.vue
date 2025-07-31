@@ -39,8 +39,8 @@ const showNewProjectDialog = ref(false);
       </div>
     </div>
 
-    <div style="padding: 5em 10vw">
-      <content-image-row src="/images/example-car.png" reverse>
+    <div style="padding: 6em 12vw">
+      <content-image-row src="/images/example-car.png" class="mb-xxl" reverse>
         <h2 class="q-mb-md">What is it?</h2>
         <p>
           Spracker is a tool that generates sprite stacks from 3D models.
@@ -57,8 +57,9 @@ const showNewProjectDialog = ref(false);
 
       <content-image-row
         src="/images/fauxton3d.png"
-        caption='"Fauxton 3D" by Gizmo199'
         :ratio="19 / 9"
+        caption='"Fauxton 3D" by Gizmo199'
+        class="mb-xxl"
       >
         <h2 class="q-mb-md">Why stack sprites?</h2>
         <p>
@@ -107,3 +108,9 @@ const showNewProjectDialog = ref(false);
     </q-toolbar>
   </div>
 </template>
+
+<style scoped>
+.mb-xxl {
+  margin-bottom: 8em;
+}
+</style>

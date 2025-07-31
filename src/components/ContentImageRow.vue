@@ -15,7 +15,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <div style="margin-bottom: 8em">
+  <div>
     <div class="row q-col-gutter-lg" :class="{ reverse: props.reverse }">
       <div class="col-12 col-md-6">
         <q-img
