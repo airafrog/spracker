@@ -3,12 +3,14 @@ import { downloadZip } from "client-zip";
 import { ref } from "vue";
 
 import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
+import LoadProjectDialog from "@/components/dialogs/LoadProjectDialog.vue";
 import { gltfService } from "@/services/gltf";
 import { blobService } from "@/services/blob";
 import { useLayerStore } from "@/stores";
 
 const layerStore = useLayerStore();
 const showNewProjectDialog = ref(false);
+const showLoadProjectDialog = ref(false);
 
 async function handleSaveProject() {
   if (!layerStore.gltf) throw new Error("No GLTF data available to save");
@@ -65,6 +67,7 @@ async function handlePngExport() {
 <template>
   <div>
     <new-project-dialog v-model="showNewProjectDialog" />
+    <load-project-dialog v-model="showLoadProjectDialog" />
 
     <q-toolbar class="bg-primary">
       <h4 class="q-mr-xl">{{ layerStore.projectName }}</h4>
@@ -85,7 +88,11 @@ async function handlePngExport() {
             <q-item clickable v-close-popup @click="handleSaveProject">
               <q-item-section>Save Project</q-item-section>
             </q-item>
-            <q-item clickable v-close-popup>
+            <q-item
+              clickable
+              v-close-popup
+              @click="showLoadProjectDialog = true"
+            >
               <q-item-section>Load Project</q-item-section>
             </q-item>
 
