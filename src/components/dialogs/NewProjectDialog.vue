@@ -17,9 +17,11 @@ async function handleCreate() {
   if (!projectName.value) throw new Error("Project Name is not defined");
   if (!file.value) throw new Error("File is not defined");
 
+  projectName.value = projectName.value.trim().toLowerCase();
+  projectName.value = projectName.value.replace(/\s+/g, "-");
+
   const fileUrl = URL.createObjectURL(file.value);
   const gltf = await gltfService.load(fileUrl);
-  // Remove metalness
   gltf.scene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
       child.material.metalness = 0;
