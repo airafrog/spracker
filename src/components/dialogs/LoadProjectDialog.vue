@@ -33,6 +33,7 @@ async function handleLoad() {
     layerStore.layerWidth = sprackFile.layerWidth;
     layerStore.layerHeight = sprackFile.layerHeight;
     layerStore.gltf = gltf;
+    layerStore.removeAllLayers();
     sprackFile.layers.forEach((layer: Layer) => {
       layerStore.createLayer(layer.height, layer.thickness, layer.name);
     });
