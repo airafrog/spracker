@@ -85,10 +85,10 @@ const showNewProjectDialog = ref(false);
           license.
         </p>
         <q-btn
+          href="https://github.com/airafrog/spracker"
           color="accent"
           icon="fab fa-github"
           label="View on GitHub"
-          to="https://github.com/airafrog/spracker"
         />
       </content-image-row>
     </div>

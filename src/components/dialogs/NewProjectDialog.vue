@@ -45,7 +45,7 @@ async function handleCreate() {
 
 <template>
   <q-dialog v-model="show">
-    <q-card style="min-width: 30vw">
+    <q-card style="min-width: 50em">
       <q-form @submit="handleCreate">
         <q-card-section class="q-mb-lg">
           <h3 class="q-mb-sm">New Project</h3>

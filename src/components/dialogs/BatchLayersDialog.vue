@@ -25,7 +25,7 @@ function handleCreate() {
 
 <template>
   <q-dialog v-model="model">
-    <q-card>
+    <q-card style="min-width: 50em">
       <q-form @submit="handleCreate">
         <q-card-section>
           <h3 class="q-mb-sm">Batch Layers</h3>

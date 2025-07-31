@@ -119,27 +119,12 @@ async function handlePngExport() {
 
       <q-separator dark vertical />
 
-      <q-btn-dropdown stretch flat icon="link" no-caps>
-        <q-list>
-          <q-item clickable dense v-close-popup>
-            <q-item-section avatar>
-              <q-avatar icon="fab fa-github" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Source Code</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable dense v-close-popup>
-            <q-item-section avatar>
-              <q-avatar icon="fa-solid fa-heart" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Loungeware Collective</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+      <q-btn
+        href="https://github.com/airafrog/spracker"
+        icon="fab fa-github"
+        stretch
+        flat
+      />
     </q-toolbar>
   </div>
 </template>

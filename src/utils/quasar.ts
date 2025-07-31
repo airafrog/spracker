@@ -1,7 +1,7 @@
 export function required() {
-  return (val: string) => {
+  return (val: string | number) => {
     if (typeof val === "string") val = val.trim();
-    if (!val) return "Required";
+    if (!val && val !== 0) return "Required";
     return true;
   };
 }
