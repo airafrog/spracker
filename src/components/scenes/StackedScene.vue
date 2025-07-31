@@ -9,12 +9,13 @@ import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
+const cameraMode = ref<CameraMode>("perspective");
+const downscaleFactor = ref(1);
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
-const cameraMode = ref<CameraMode>("perspective");
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
@@ -102,6 +103,10 @@ function handleSetCameraMode(mode: CameraMode) {
   cameraService.setCameraMode(mode);
   cameraMode.value = mode;
 }
+
+function handleSetDownscaleFactor(factor: number) {
+  downscaleFactor.value = factor;
+}
 </script>
 
 <template>
@@ -109,7 +114,9 @@ function handleSetCameraMode(mode: CameraMode) {
     <scene-toolbar
       v-model:background-hex="settingsStore.stackedSceneBackgroundHex"
       :camera-mode="cameraMode"
+      :downscale-factor="downscaleFactor"
       @set-camera-mode="handleSetCameraMode"
+      @set-downscale-factor="handleSetDownscaleFactor"
       @view-axis="handleViewAxis"
     />
 

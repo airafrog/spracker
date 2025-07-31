@@ -3,14 +3,24 @@ import type { Axis, CameraMode } from "@/types";
 
 const props = defineProps<{
   cameraMode: string;
+  downscaleFactor: number;
 }>();
 
 const emit = defineEmits<{
   (e: "setCameraMode", mode: CameraMode): void;
+  (e: "setDownscaleFactor", factor: number): void;
   (e: "viewAxis", axis: Axis, distance: number): void;
 }>();
 
 const backgroundHex = defineModel<string>("backgroundHex", { required: true });
+
+function handleDownscaleFactorUpdate(value: string | number | null) {
+  if (value === null) return;
+  if (typeof value === "string") value = parseFloat(value);
+  if (value < 1) value = 1;
+  if (value > 8) value = 8;
+  emit("setDownscaleFactor", value);
+}
 </script>
 
 <template>
@@ -28,29 +38,46 @@ const backgroundHex = defineModel<string>("backgroundHex", { required: true });
 
     <q-btn icon="fas fa-video">
       <q-menu anchor="bottom right" self="top right">
-        <q-list>
-          <q-item
-            :active="props.cameraMode === 'perspective'"
-            clickable
-            @click="emit('setCameraMode', 'perspective')"
-          >
-            <q-item-section>Perspective</q-item-section>
-          </q-item>
-          <q-item
-            :active="props.cameraMode === 'orthographic'"
-            clickable
-            @click="emit('setCameraMode', 'orthographic')"
-          >
-            <q-item-section>Orthographic</q-item-section>
-          </q-item>
-        </q-list>
+        <div class="row no-wrap q-pa-sm q-mb-md">
+          <div class="column">
+            <q-btn
+              :color="props.cameraMode === 'perspective' ? 'primary' : ''"
+              label="perspective"
+              no-caps
+              @click="emit('setCameraMode', 'perspective')"
+            />
+          </div>
+
+          <q-separator vertical class="q-mx-sm" />
+
+          <div class="column">
+            <q-btn
+              :color="props.cameraMode === 'orthographic' ? 'primary' : ''"
+              label="orthographic"
+              no-caps
+              @click="emit('setCameraMode', 'orthographic')"
+            />
+          </div>
+        </div>
+
+        <div class="q-px-sm">
+          <q-input
+            :model-value="props.downscaleFactor"
+            type="number"
+            label="Downscale Factor"
+            suffix="x"
+            dense
+            filled
+            @update:model-value="handleDownscaleFactorUpdate"
+          />
+        </div>
       </q-menu>
     </q-btn>
 
-    <q-btn icon="fas fa-fill-drip">
-      <q-popup-proxy>
+    <q-btn icon="fas fa-gear">
+      <q-menu anchor="bottom right" self="top right">
         <q-color v-model="backgroundHex" />
-      </q-popup-proxy>
+      </q-menu>
     </q-btn>
   </div>
 </template>
