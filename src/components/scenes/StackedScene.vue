@@ -5,7 +5,7 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
 import { CameraService } from "@/services/camera";
 import { useLayerStore, useSettingsStore } from "@/stores";
-import type { Axis } from "@/types";
+import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
 const settingsStore = useSettingsStore();
@@ -14,12 +14,12 @@ const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
+const cameraMode = ref<CameraMode>("perspective");
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
 
 function createStack() {
   const layerValues = Object.values(layerStore.layers);
-
   layerValues.forEach((layer, i) => {
     const layerService = layerStore.getLayerService(layer.id);
     if (!layerService) return;
@@ -97,14 +97,19 @@ onUnmounted(() => {
 function handleViewAxis(axis: Axis, distance: number) {
   cameraService.viewAxis(axis, distance);
 }
+
+function handleSetCameraMode(mode: CameraMode) {
+  cameraService.setCameraMode(mode);
+  cameraMode.value = mode;
+}
 </script>
 
 <template>
   <div class="full-height" style="position: relative">
     <scene-toolbar
       v-model:background-hex="settingsStore.stackedSceneBackgroundHex"
-      :camera-mode="cameraService.getCameraMode().value"
-      @toggle-camera-mode="cameraService.toggleCameraMode()"
+      :camera-mode="cameraMode"
+      @set-camera-mode="handleSetCameraMode"
       @view-axis="handleViewAxis"
     />
 

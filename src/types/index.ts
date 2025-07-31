@@ -7,3 +7,5 @@ export type Layer = {
 };
 
 export type Axis = "x" | "y" | "z";
+
+export type CameraMode = "perspective" | "orthographic";

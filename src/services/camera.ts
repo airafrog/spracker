@@ -1,11 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { ref } from "vue";
 
-import type { Axis } from "@/types";
+import type { Axis, CameraMode } from "@/types";
 
 export class CameraService {
-  private cameraMode = ref<"perspective" | "orthographic">("perspective");
   private perspectiveOrbitControls: OrbitControls | null = null;
   private orthographicOrbitControls: OrbitControls | null = null;
 
@@ -23,16 +21,6 @@ export class CameraService {
     this.orthographicCamera.far = 500;
   }
 
-  public toggleCameraMode() {
-    if (this.cameraMode.value === "perspective") {
-      this.cameraMode.value = "orthographic";
-      this.camera = this.orthographicCamera;
-    } else {
-      this.cameraMode.value = "perspective";
-      this.camera = this.perspectiveCamera;
-    }
-  }
-
   public enableOrbitControls(canvas: HTMLCanvasElement) {
     this.perspectiveOrbitControls = new OrbitControls(
       this.perspectiveCamera,
@@ -45,8 +33,9 @@ export class CameraService {
     );
   }
 
-  public getCameraMode() {
-    return this.cameraMode;
+  public setCameraMode(mode: CameraMode) {
+    this.camera =
+      mode === "perspective" ? this.perspectiveCamera : this.orthographicCamera;
   }
 
   public resize(width: number, height: number) {
