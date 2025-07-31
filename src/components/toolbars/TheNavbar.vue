@@ -18,6 +18,8 @@ async function handleSaveProject() {
   const fileContent = {
     projectName: layerStore.projectName,
     layers: layerStore.layers,
+    layerWidth: layerStore.layerWidth,
+    layerHeight: layerStore.layerHeight,
     glb: new Uint8Array(glb),
   };
 

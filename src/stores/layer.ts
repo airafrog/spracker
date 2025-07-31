@@ -26,7 +26,7 @@ export const useLayerStore = defineStore("layer", () => {
     return gltfSizeVector;
   });
 
-  function createLayer(height = 0, thickness = 10) {
+  function createLayer(height = 0, thickness = 10, layerName?: string) {
     if (!gltf.value) throw new Error("GLTF is undefined");
     const id = uuidv4();
 
@@ -44,7 +44,7 @@ export const useLayerStore = defineStore("layer", () => {
       id,
       height,
       thickness,
-      name: `Layer ${layers.value.length}`,
+      name: layerName || `Layer ${layers.value.length}`,
     });
   }
 

@@ -47,7 +47,7 @@ async function handleCreate() {
   <q-dialog v-model="show">
     <q-card style="min-width: 40vw">
       <q-form @submit="handleCreate">
-        <q-card-section class="q-mb-lg">
+        <q-card-section>
           <h3 class="q-mb-sm">New Project</h3>
           <p>
             Spracker currently only supports
@@ -65,7 +65,7 @@ async function handleCreate() {
           <q-file
             v-model="file"
             :rules="[Rules.required()]"
-            label="GLB File"
+            label=".glb File"
             accept=".glb"
             filled
           >

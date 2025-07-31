@@ -4,13 +4,16 @@ import { ref } from "vue";
 import ContentImageRow from "@/components/ContentImageRow.vue";
 import LandingScene from "@/components/scenes/LandingScene.vue";
 import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
+import LoadProjectDialog from "@/components/dialogs/LoadProjectDialog.vue";
 
 const showNewProjectDialog = ref(false);
+const showLoadProjectDialog = ref(false);
 </script>
 
 <template>
   <div>
     <new-project-dialog v-model="showNewProjectDialog" />
+    <load-project-dialog v-model="showLoadProjectDialog" />
 
     <div style="height: 75vh">
       <landing-scene class="absolute" style="height: 75vh" />
@@ -31,7 +34,7 @@ const showNewProjectDialog = ref(false);
                 color="primary"
                 label="Load Project"
                 icon="folder_open"
-                @click="showNewProjectDialog = true"
+                @click="showLoadProjectDialog = true"
               />
             </div>
           </div>
