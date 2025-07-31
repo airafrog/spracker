@@ -25,7 +25,7 @@ function handleDelete() {
 
 <template>
   <q-dialog v-model="model">
-    <q-card style="min-width: 50em">
+    <q-card style="min-width: 40vw">
       <q-card-section>
         <h3 class="q-mb-sm">Delete Layer</h3>
         <p>

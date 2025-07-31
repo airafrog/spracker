@@ -44,7 +44,7 @@ function handleSetLayerSize() {
 
 <template>
   <q-dialog v-model="model">
-    <q-card style="min-width: 50em">
+    <q-card style="min-width: 40vw">
       <q-form @submit="handleSetLayerSize">
         <q-card-section>
           <h3 class="q-mb-sm">Sprite Dimensions</h3>
