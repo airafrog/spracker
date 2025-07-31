@@ -38,35 +38,32 @@ function handleDownscaleFactorUpdate(value: string | number | null) {
 
     <q-btn icon="fas fa-video">
       <q-menu anchor="bottom right" self="top right">
-        <div class="row no-wrap q-pa-sm q-mb-md">
-          <div class="column">
-            <q-btn
-              :color="props.cameraMode === 'perspective' ? 'primary' : ''"
-              label="perspective"
-              no-caps
-              @click="emit('setCameraMode', 'perspective')"
-            />
+        <div class="q-pa-md">
+          <div class="row no-wrap q-mb-md">
+            <div class="column">
+              <q-btn
+                :color="props.cameraMode === 'perspective' ? 'primary' : ''"
+                label="perspective"
+                no-caps
+                @click="emit('setCameraMode', 'perspective')"
+              />
+            </div>
+            <q-separator vertical class="q-mx-sm" />
+            <div class="column">
+              <q-btn
+                :color="props.cameraMode === 'orthographic' ? 'primary' : ''"
+                label="orthographic"
+                no-caps
+                @click="emit('setCameraMode', 'orthographic')"
+              />
+            </div>
           </div>
 
-          <q-separator vertical class="q-mx-sm" />
-
-          <div class="column">
-            <q-btn
-              :color="props.cameraMode === 'orthographic' ? 'primary' : ''"
-              label="orthographic"
-              no-caps
-              @click="emit('setCameraMode', 'orthographic')"
-            />
-          </div>
-        </div>
-
-        <div class="q-px-sm">
           <q-input
             :model-value="props.downscaleFactor"
             type="number"
             label="Downscale Factor"
             suffix="x"
-            dense
             filled
             @update:model-value="handleDownscaleFactorUpdate"
           />
