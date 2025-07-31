@@ -5,7 +5,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { CameraService } from "@/services/camera";
 import { gltfService } from "@/services/gltf";
 
-const DOWNSCALE_AMOUNT = 5;
+const DOWNSCALE_FACTOR = 5;
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const cameraService = new CameraService();
@@ -20,13 +20,10 @@ onMounted(async () => {
 
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value });
   renderer.setSize(
-    canvasWidth / DOWNSCALE_AMOUNT,
-    canvasHeight / DOWNSCALE_AMOUNT
+    canvasWidth / DOWNSCALE_FACTOR,
+    canvasHeight / DOWNSCALE_FACTOR
   );
   renderer.setAnimationLoop(animate);
-
-  canvas.value.style.width = "100%";
-  canvas.value.style.height = "100%";
 
   cameraService.resize(canvasWidth, canvasHeight);
   cameraService.camera.position.set(0, 4, 2);
@@ -52,11 +49,12 @@ onMounted(async () => {
     const canvasWidth = canvas.value.clientWidth;
     const canvasHeight = canvas.value.clientHeight;
     renderer.setSize(
-      canvasWidth / DOWNSCALE_AMOUNT,
-      canvasHeight / DOWNSCALE_AMOUNT
+      canvasWidth / DOWNSCALE_FACTOR,
+      canvasHeight / DOWNSCALE_FACTOR
     );
     cameraService.resize(canvasWidth, canvasHeight);
   };
+
   window.addEventListener("resize", resizeFunction);
 });
 

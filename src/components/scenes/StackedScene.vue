@@ -14,7 +14,6 @@ const downscaleFactor = ref(1);
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
-const canvasContainer = ref<HTMLDivElement>();
 const cameraService = new CameraService();
 let renderer: THREE.WebGLRenderer;
 let resizeFunction = () => {};
@@ -48,19 +47,16 @@ watch(
 
 onMounted(() => {
   if (!canvas.value) throw new Error("Canvas is not defined");
-  if (!canvasContainer.value) {
-    throw new Error("Canvas container is not defined");
-  }
+  const canvasWidth = canvas.value.clientWidth;
+  const canvasHeight = canvas.value.clientHeight;
 
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value });
   renderer.setSize(
-    canvasContainer.value.clientWidth,
-    canvasContainer.value.clientHeight
+    canvasWidth / downscaleFactor.value,
+    canvasHeight / downscaleFactor.value
   );
   renderer.setAnimationLoop(animate);
 
-  const canvasWidth = canvasContainer.value.clientWidth;
-  const canvasHeight = canvasContainer.value.clientHeight;
   cameraService.resize(canvasWidth, canvasHeight);
   cameraService.enableOrbitControls(canvas.value);
 
@@ -74,13 +70,18 @@ onMounted(() => {
   }
 
   resizeFunction = () => {
-    if (!canvasContainer.value) return;
-    const canvasWidth = canvasContainer.value.clientWidth;
-    const canvasHeight = canvasContainer.value.clientHeight;
-    renderer.setSize(canvasWidth, canvasHeight);
+    if (!canvas.value) return;
+    const canvasWidth = canvas.value.clientWidth;
+    const canvasHeight = canvas.value.clientHeight;
+    renderer.setSize(
+      canvasWidth / downscaleFactor.value,
+      canvasHeight / downscaleFactor.value
+    );
     cameraService.resize(canvasWidth, canvasHeight);
   };
+
   window.addEventListener("resize", resizeFunction);
+  watch(downscaleFactor, resizeFunction);
 
   watch(
     () => settingsStore.stackedSceneBackgroundHex,
@@ -120,19 +121,6 @@ function handleSetDownscaleFactor(factor: number) {
       @view-axis="handleViewAxis"
     />
 
-    <div ref="canvasContainer" class="canvas-container">
-      <canvas ref="canvas" />
-    </div>
+    <canvas ref="canvas" class="absolute full-width full-height" />
   </div>
 </template>
-
-<style scoped>
-.canvas-container {
-  width: 100%;
-  height: 100%;
-}
-
-canvas {
-  position: absolute;
-}
-</style>
