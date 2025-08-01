@@ -2,17 +2,26 @@
 import { Notify } from "quasar";
 import { ref } from "vue";
 
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import * as Rules from "@/utils/quasar";
 
 const model = defineModel<boolean>({ required: true });
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 const layerCount = ref(10);
 const layerThickness = ref(10);
 
 function handleCreate() {
-  layerStore.createEvenlySpacedLayers(layerCount.value, layerThickness.value);
+  if (!modelStore.model) return;
+
+  layerStore.createEvenlySpacedLayers(
+    modelStore.model,
+    modelStore.modelBox,
+    modelStore.modelSize,
+    layerCount.value,
+    layerThickness.value
+  );
   model.value = false;
 
   Notify.create({

@@ -1,12 +1,11 @@
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 
 import { textureLoader } from "@/services/texture";
 
 export class LayerService {
   private scene = new THREE.Scene();
-  private gltfBox = new THREE.Box3();
-  public gltfSize = new THREE.Vector3();
+  private modelBox = new THREE.Box3();
+  public modelSize = new THREE.Vector3();
   private thickness = 0;
   private height = 0;
   private lowerClippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0));
@@ -26,43 +25,45 @@ export class LayerService {
   });
   static {
     LayerService.renderer.localClippingEnabled = true;
-    LayerService.renderer.setClearColor(0x000000, 0); // Set clear color to black with alpha 0
+    LayerService.renderer.setClearColor(0x000000, 0);
   }
 
   constructor(
-    gltf: GLTF,
+    model: THREE.Object3D,
+    modelBox: THREE.Box3,
+    modelSize: THREE.Vector3,
     layerHeight: number,
     thickness: number,
     rendererWidth: number,
     rendererHeight: number
   ) {
-    this.gltfBox.setFromObject(gltf.scene);
-    this.gltfBox.getSize(this.gltfSize);
-    this.setHeight(layerHeight);
-    this.setThickness(thickness);
-    this.setRendererSize(rendererWidth, rendererHeight);
-    this.configureCamera();
-
+    this.modelBox.copy(modelBox);
+    this.modelSize.copy(modelSize);
     this.mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(this.gltfSize.x, this.gltfSize.z, 1, 1),
+      new THREE.PlaneGeometry(this.modelSize.x, this.modelSize.z, 1, 1),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
         transparent: true,
       })
     );
 
-    const clonedScene = this.prepareGltfScene(gltf);
-    this.scene.add(clonedScene);
+    this.setHeight(layerHeight);
+    this.setThickness(thickness);
+    this.setRendererSize(rendererWidth, rendererHeight);
+    this.configureCamera();
+
+    const clonedModel = this.prepareModel(model);
+    this.scene.add(clonedModel);
 
     const light = new THREE.AmbientLight(0xffffff, 1);
     this.scene.add(light);
   }
 
-  private prepareGltfScene(gltf: GLTF) {
-    const clonedScene = gltf.scene.clone();
+  private prepareModel(model: THREE.Object3D) {
+    const clonedModel = model.clone();
 
     // Enable clipping on all materials in the cloned scene
-    clonedScene.traverse((child) => {
+    clonedModel.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         if (Array.isArray(child.material)) {
           child.material = child.material.map((material) => {
@@ -85,15 +86,15 @@ export class LayerService {
       }
     });
 
-    return clonedScene;
+    return clonedModel;
   }
 
   private configureCamera() {
-    LayerService.camera.left = -this.gltfSize.x / 2;
-    LayerService.camera.right = this.gltfSize.x / 2;
-    LayerService.camera.top = this.gltfSize.z / 2;
-    LayerService.camera.bottom = -this.gltfSize.z / 2;
-    LayerService.camera.position.set(0, this.gltfSize.y, 0);
+    LayerService.camera.left = -this.modelSize.x / 2;
+    LayerService.camera.right = this.modelSize.x / 2;
+    LayerService.camera.top = this.modelSize.z / 2;
+    LayerService.camera.bottom = -this.modelSize.z / 2;
+    LayerService.camera.position.set(0, this.modelSize.y, 0);
     LayerService.camera.lookAt(0, 0, 0);
     LayerService.camera.updateProjectionMatrix();
   }
@@ -123,7 +124,7 @@ export class LayerService {
    * multiplied by the GLTF model's height.
    */
   public getWorldHeight(): number {
-    return this.gltfBox.min.y + this.height * this.gltfSize.y;
+    return this.modelBox.min.y + this.height * this.modelSize.y;
   }
 
   /**
@@ -131,7 +132,7 @@ export class LayerService {
    * @returns The thickness of the layer in world coordinates.
    */
   public getWorldThickness(): number {
-    return this.thickness * this.gltfSize.y;
+    return this.thickness * this.modelSize.y;
   }
 
   /**
@@ -198,7 +199,6 @@ export class LayerService {
    * Disposes of the layer resources.
    */
   public dispose() {
-    // Remove and dispose of the cloned scene
     this.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         if (Array.isArray(child.material)) {

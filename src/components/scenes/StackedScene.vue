@@ -4,10 +4,11 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
 import { CameraService } from "@/services/camera";
-import { useLayerStore, useSettingsStore } from "@/stores";
+import { useLayerStore, useModelStore, useSettingsStore } from "@/stores";
 import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 const settingsStore = useSettingsStore();
 const cameraMode = ref<CameraMode>("perspective");
 const downscaleFactor = ref(1);
@@ -23,7 +24,8 @@ function createStack() {
   layerValues.forEach((layer, i) => {
     const layerService = layerStore.getLayerService(layer.id);
     if (!layerService) return;
-    const separation = layerService.gltfSize.y / layerValues.length;
+
+    const separation = modelStore.modelSize.y / layerValues.length;
 
     const layerMesh = layerService.getMesh();
     layerMesh.position.set(0, separation * i, 0);

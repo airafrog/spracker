@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import type { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import { v4 as uuidv4 } from "uuid";
-import { computed, ref, shallowRef } from "vue";
+import { ref, shallowRef } from "vue";
 
 import { LayerService } from "@/services/layer";
 import type { Layer } from "@/types";
@@ -16,22 +15,21 @@ export const useLayerStore = defineStore("layer", () => {
   const stackGroup = shallowRef(new THREE.Group());
   const projectName = ref("");
 
-  const gltf = shallowRef<GLTF>();
-  const gltfBox = new THREE.Box3();
-  const gltfSizeVector = new THREE.Vector3();
-  const gltfSize = computed(() => {
-    if (!gltf.value) return new THREE.Vector3(0, 0, 0);
-    gltfBox.setFromObject(gltf.value.scene);
-    gltfBox.getSize(gltfSizeVector);
-    return gltfSizeVector;
-  });
-
-  function createLayer(height = 0, thickness = 10, layerName?: string) {
-    if (!gltf.value) throw new Error("GLTF is undefined");
+  function createLayer(
+    model: THREE.Object3D,
+    modelBox: THREE.Box3,
+    modelSize: THREE.Vector3,
+    height = 0,
+    thickness = 10,
+    layerName?: string
+  ) {
+    if (!model) throw new Error("Model is undefined");
     const id = uuidv4();
 
     const layerService = new LayerService(
-      gltf.value,
+      model,
+      modelBox,
+      modelSize,
       height,
       thickness,
       layerWidth.value,
@@ -48,13 +46,19 @@ export const useLayerStore = defineStore("layer", () => {
     });
   }
 
-  function createEvenlySpacedLayers(layerCount: number, thickness: number) {
+  function createEvenlySpacedLayers(
+    model: THREE.Object3D,
+    modelBox: THREE.Box3,
+    modelSize: THREE.Vector3,
+    layerCount: number,
+    thickness: number
+  ) {
     removeAllLayers();
 
     const separation = 100 / layerCount;
     for (let i = 0; i < layerCount; i++) {
       const height = Math.floor(separation * i);
-      createLayer(height, thickness);
+      createLayer(model, modelBox, modelSize, height, thickness);
     }
   }
 
@@ -153,18 +157,25 @@ export const useLayerStore = defineStore("layer", () => {
     setLayerOrder(id, newIndex);
   }
 
+  function resetStore() {
+    removeAllLayers();
+    activeLayer.value = null;
+    layerWidth.value = 32;
+    layerHeight.value = 32;
+    stackGroup.value.clear();
+  }
+
   return {
     activeLayer,
     createEvenlySpacedLayers,
     createLayer,
     getLayerIndex,
     getLayerService,
-    gltf,
-    gltfSize,
     layers,
     layerWidth,
     layerHeight,
     projectName,
+    resetStore,
     removeAllLayers,
     removeLayer,
     setLayerHeight,

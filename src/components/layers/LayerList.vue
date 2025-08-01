@@ -4,12 +4,18 @@ import { ref } from "vue";
 import BatchLayersDialog from "@/components/dialogs/BatchLayersDialog.vue";
 import LayerSizeDialog from "@/components/dialogs/LayerSizeDialog.vue";
 import LayerCard from "@/components/layers/LayerCard.vue";
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 
 function handleCreateLayer() {
-  layerStore.createLayer();
+  if (!modelStore.model) return;
+  layerStore.createLayer(
+    modelStore.model,
+    modelStore.modelBox,
+    modelStore.modelSize
+  );
 }
 
 const showBatchLayersDialog = ref(false);

@@ -3,7 +3,7 @@ import { Loading, Notify } from "quasar";
 import { shallowRef } from "vue";
 
 import { gltfService } from "@/services/gltf";
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import type { Layer } from "@/types";
 import { zSprackFile } from "@/types";
 import * as Rules from "@/utils/quasar";
@@ -11,6 +11,7 @@ import * as Rules from "@/utils/quasar";
 const show = defineModel<boolean>({ required: true });
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 const file = shallowRef<File>();
 
 async function handleLoad() {
@@ -29,13 +30,24 @@ async function handleLoad() {
     const glbBlobUrl = URL.createObjectURL(glbBlob);
     const gltf = await gltfService.load(glbBlobUrl);
 
+    layerStore.resetStore();
     layerStore.projectName = sprackFile.projectName;
     layerStore.layerWidth = sprackFile.layerWidth;
     layerStore.layerHeight = sprackFile.layerHeight;
-    layerStore.gltf = gltf;
-    layerStore.removeAllLayers();
+
+    modelStore.setModel(gltf.scene);
+
     sprackFile.layers.forEach((layer: Layer) => {
-      layerStore.createLayer(layer.height, layer.thickness, layer.name);
+      if (!modelStore.model) return;
+
+      layerStore.createLayer(
+        modelStore.model,
+        modelStore.modelBox,
+        modelStore.modelSize,
+        layer.height,
+        layer.thickness,
+        layer.name
+      );
     });
 
     Notify.create({

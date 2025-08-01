@@ -6,61 +6,115 @@ import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
 import LoadProjectDialog from "@/components/dialogs/LoadProjectDialog.vue";
 import { gltfService } from "@/services/gltf";
 import { blobService } from "@/services/blob";
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
+import type { SprackFile } from "@/types";
+import { Loading, Notify } from "quasar";
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 const showNewProjectDialog = ref(false);
 const showLoadProjectDialog = ref(false);
 
 async function handleSaveProject() {
-  if (!layerStore.gltf) throw new Error("No GLTF data available to save");
-  const glb = await gltfService.export(layerStore.gltf.scene, true);
-  if (!(glb instanceof ArrayBuffer)) throw new Error("Wrong type");
+  try {
+    Loading.show({ message: "Saving project..." });
 
-  const fileContent = {
-    projectName: layerStore.projectName,
-    layers: layerStore.layers,
-    layerWidth: layerStore.layerWidth,
-    layerHeight: layerStore.layerHeight,
-    glb: new Uint8Array(glb),
-  };
+    if (!modelStore.model) throw new Error("No model data available to save");
 
-  const blob = new Blob([JSON.stringify(fileContent)], {
-    type: "application/json",
-  });
+    const glb = await gltfService.export(modelStore.model, true);
+    if (!(glb instanceof ArrayBuffer)) {
+      throw new Error("GLB is not an ArrayBuffer");
+    }
 
-  blobService.downloadBlob(blob, `${layerStore.projectName}.sprack`);
+    const fileContent: SprackFile = {
+      projectName: layerStore.projectName,
+      layers: layerStore.layers,
+      layerWidth: layerStore.layerWidth,
+      layerHeight: layerStore.layerHeight,
+      glb: new Uint8Array(glb),
+    };
+
+    const fileBlob = new Blob([JSON.stringify(fileContent)], {
+      type: "application/json",
+    });
+
+    blobService.downloadBlob(fileBlob, `${layerStore.projectName}.sprack`);
+
+    Notify.create({
+      type: "positive",
+      message: `Project "${layerStore.projectName}" saved successfully!`,
+    });
+  } catch (error) {
+    console.error(error);
+    Notify.create({
+      type: "negative",
+      message: `Failed to save project: ${error}`,
+    });
+  } finally {
+    Loading.hide();
+  }
 }
 
 async function handle3dExport(binary: boolean) {
-  const output = await gltfService.export(layerStore.stackGroup, binary);
-  const isArrayBuffer = output instanceof ArrayBuffer;
+  try {
+    Loading.show({ message: "Exporting file..." });
 
-  const blob = isArrayBuffer
-    ? new Blob([output], { type: "application/octet-stream" })
-    : new Blob([JSON.stringify(output)], { type: "application/json" });
+    const output = await gltfService.export(layerStore.stackGroup, binary);
+    const isArrayBuffer = output instanceof ArrayBuffer;
 
-  const fileName = isArrayBuffer
-    ? `${layerStore.projectName}.glb`
-    : `${layerStore.projectName}.gltf`;
+    const blob = isArrayBuffer
+      ? new Blob([output], { type: "application/octet-stream" })
+      : new Blob([JSON.stringify(output)], { type: "application/json" });
 
-  blobService.downloadBlob(blob, fileName);
+    const fileName = isArrayBuffer
+      ? `${layerStore.projectName}.glb`
+      : `${layerStore.projectName}.gltf`;
+
+    blobService.downloadBlob(blob, fileName);
+  } catch (error) {
+    console.error(error);
+    Notify.create({
+      type: "negative",
+      message: `Failed to export project: ${error}`,
+    });
+  } finally {
+    Loading.hide();
+  }
 }
 
 async function handlePngExport() {
-  const canvasDataUrls = layerStore.layers.map((layer) => layer.canvasDataUrl);
-  const canvasBlobPromises = canvasDataUrls.map((dataUrl) =>
-    fetch(dataUrl).then((response) => response.blob())
-  );
-  const canvasBlobs = await Promise.all(canvasBlobPromises);
+  try {
+    Loading.show({ message: "Exporting PNG(s)..." });
 
-  const files = canvasBlobs.map(
-    (blob, index) =>
-      new File([blob], `layer-${index + 1}.png`, { type: "image/png" })
-  );
+    const canvasDataUrls = layerStore.layers.map(
+      (layer) => layer.canvasDataUrl
+    );
+    const canvasBlobPromises = canvasDataUrls.map((dataUrl) =>
+      fetch(dataUrl).then((response) => response.blob())
+    );
+    const canvasBlobs = await Promise.all(canvasBlobPromises);
 
-  const zipBlob = await downloadZip(files).blob();
-  blobService.downloadBlob(zipBlob, `${layerStore.projectName}.zip`);
+    const files = canvasBlobs.map(
+      (blob, index) =>
+        new File([blob], `layer-${index + 1}.png`, { type: "image/png" })
+    );
+
+    const zipBlob = await downloadZip(files).blob();
+    blobService.downloadBlob(zipBlob, `${layerStore.projectName}.zip`);
+
+    Notify.create({
+      type: "positive",
+      message: `PNG(s) exported successfully!`,
+    });
+  } catch (error) {
+    console.error(error);
+    Notify.create({
+      type: "negative",
+      message: `Failed to export PNG(s): ${error}`,
+    });
+  } finally {
+    Loading.hide();
+  }
 }
 </script>
 

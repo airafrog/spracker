@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Notify } from "quasar";
-import * as THREE from "three";
 import { ref, shallowRef } from "vue";
 
 import { gltfService } from "@/services/gltf";
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import * as Rules from "@/utils/quasar";
 
 const show = defineModel<boolean>({ required: true });
 
+const modelStore = useModelStore();
 const layerStore = useLayerStore();
 const file = shallowRef<File>();
 const projectName = ref<string>("");
@@ -17,24 +17,15 @@ async function handleCreate() {
   if (!projectName.value) throw new Error("Project Name is not defined");
   if (!file.value) throw new Error("File is not defined");
 
-  projectName.value = projectName.value.trim().toLowerCase();
-  projectName.value = projectName.value.replace(/\s+/g, "-");
-
   const fileUrl = URL.createObjectURL(file.value);
   const gltf = await gltfService.load(fileUrl);
-  gltf.scene.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.material.metalness = 0;
-      child.material.roughness = 1;
-      child.material.needsUpdate = true;
-    }
-  });
 
-  layerStore.removeAllLayers();
+  layerStore.resetStore();
+  modelStore.setModel(gltf.scene);
+
+  projectName.value = projectName.value.trim().toLowerCase();
+  projectName.value = projectName.value.replace(/\s+/g, "-");
   layerStore.projectName = projectName.value;
-  layerStore.layerWidth = 32;
-  layerStore.layerHeight = 32;
-  layerStore.gltf = gltf;
 
   Notify.create({
     type: "positive",

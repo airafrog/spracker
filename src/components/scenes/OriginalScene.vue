@@ -5,10 +5,15 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
 import { CameraService } from "@/services/camera";
-import { useLayerStore, useSettingsStore } from "@/stores";
+import { useLayerStore, useModelStore, useSettingsStore } from "@/stores";
 import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
+const { activeLayer } = storeToRefs(layerStore);
+
+const modelStore = useModelStore();
+const { model } = storeToRefs(modelStore);
+
 const settingsStore = useSettingsStore();
 const cameraMode = ref<CameraMode>("perspective");
 const downscaleFactor = ref(1);
@@ -28,7 +33,6 @@ const lineMaterial = new THREE.LineBasicMaterial({
 const layerWireframe = new THREE.LineSegments(edgesGeometry, lineMaterial);
 
 onMounted(() => {
-  if (!layerStore.gltf) throw new Error("Layer store GLTF is not defined");
   if (!canvas.value) throw new Error("Canvas is not defined");
   const canvasWidth = canvas.value.clientWidth;
   const canvasHeight = canvas.value.clientHeight;
@@ -45,7 +49,6 @@ onMounted(() => {
 
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
-  scene.add(layerStore.gltf.scene);
   scene.add(layerWireframe);
 
   function animate() {
@@ -57,6 +60,7 @@ onMounted(() => {
     if (!canvas.value) return;
     const canvasWidth = canvas.value.clientWidth;
     const canvasHeight = canvas.value.clientHeight;
+
     renderer.setSize(
       canvasWidth / downscaleFactor.value,
       canvasHeight / downscaleFactor.value
@@ -66,12 +70,6 @@ onMounted(() => {
 
   window.addEventListener("resize", resizeFunction);
   watch(downscaleFactor, resizeFunction);
-
-  watch(
-    () => settingsStore.originalSceneBackgroundHex,
-    (newColor) => (scene.background = new THREE.Color(newColor)),
-    { immediate: true }
-  );
 });
 
 onUnmounted(() => {
@@ -80,7 +78,22 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeFunction);
 });
 
-const { activeLayer } = storeToRefs(layerStore);
+watch(
+  model,
+  (newModel) => {
+    if (!newModel) return;
+
+    cameraService.setPosition(
+      modelStore.modelSize.x * 2,
+      modelStore.modelSize.y * 2,
+      modelStore.modelSize.z * 2
+    );
+
+    scene.add(newModel);
+  },
+  { immediate: true }
+);
+
 watch(
   activeLayer,
   (newLayer) => {
@@ -97,15 +110,21 @@ watch(
 
     layerWireframe.position.y = height;
     layerWireframe.scale.set(
-      layerService.gltfSize.x,
+      modelStore.modelSize.x,
       thickness,
-      layerService.gltfSize.z
+      modelStore.modelSize.z
     );
   },
   {
     immediate: true,
     deep: true,
   }
+);
+
+watch(
+  () => settingsStore.originalSceneBackgroundHex,
+  (newColor) => (scene.background = new THREE.Color(newColor)),
+  { immediate: true }
 );
 
 function handleViewAxis(axis: Axis, distance: number) {

@@ -3,17 +3,17 @@ import { useQuasar } from "quasar";
 
 import TheEditor from "@/components/TheEditor.vue";
 import LandingPage from "@/components/LandingPage.vue";
-import { useLayerStore } from "@/stores";
+import { useModelStore } from "@/stores";
 
 const $q = useQuasar();
 $q.dark.set(true);
 
-const layerStore = useLayerStore();
+const modelStore = useModelStore();
 </script>
 
 <template>
   <div class="window-height">
-    <the-editor v-if="layerStore.gltf" />
+    <the-editor v-if="modelStore.model" />
     <landing-page v-else />
   </div>
 </template>

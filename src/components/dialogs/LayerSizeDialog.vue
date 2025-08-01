@@ -2,12 +2,13 @@
 import { Notify } from "quasar";
 import { computed, ref } from "vue";
 
-import { useLayerStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import * as Rules from "@/utils/quasar";
 
 const model = defineModel<boolean>({ required: true });
 
 const layerStore = useLayerStore();
+const modelStore = useModelStore();
 const newLayerWidth = ref(layerStore.layerWidth);
 const newLayerHeight = ref(layerStore.layerHeight);
 
@@ -17,7 +18,7 @@ const lockedLayerDepth = computed(() =>
 );
 
 const gltfAspectRatio = computed(() => {
-  return layerStore.gltfSize.x / layerStore.gltfSize.z;
+  return modelStore.modelSize.x / modelStore.modelSize.z;
 });
 
 const layerAspectRatio = computed(() => {
@@ -54,11 +55,11 @@ function handleSetLayerSize() {
           <p>
             Dimensions:
             <span class="text-info">{{
-              layerStore.gltfSize.x.toFixed(4)
+              modelStore.modelSize.x.toFixed(4)
             }}</span>
             x
             <span class="text-info">{{
-              layerStore.gltfSize.z.toFixed(4)
+              modelStore.modelSize.z.toFixed(4)
             }}</span>
             <br />
             Aspect Ratio:
