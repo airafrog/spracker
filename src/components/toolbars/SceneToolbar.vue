@@ -2,17 +2,22 @@
 import type { Axis, CameraMode } from "@/types";
 
 const props = defineProps<{
+  backgroundHex: string;
   cameraMode: string;
   downscaleFactor: number;
 }>();
 
 const emit = defineEmits<{
+  (e: "setBackgroundHex", hex: string): void;
   (e: "setCameraMode", mode: CameraMode): void;
   (e: "setDownscaleFactor", factor: number): void;
   (e: "viewAxis", axis: Axis, distance: number): void;
 }>();
 
-const backgroundHex = defineModel<string>("backgroundHex", { required: true });
+function handleBackgroundHexUpdate(value: string | null) {
+  if (value === null) return;
+  emit("setBackgroundHex", value);
+}
 
 function handleDownscaleFactorUpdate(value: string | number | null) {
   if (value === null) return;
@@ -71,9 +76,12 @@ function handleDownscaleFactorUpdate(value: string | number | null) {
       </q-menu>
     </q-btn>
 
-    <q-btn icon="fas fa-gear">
+    <q-btn icon="fas fa-fill-drip">
       <q-menu anchor="bottom right" self="top right">
-        <q-color v-model="backgroundHex" />
+        <q-color
+          :model-value="props.backgroundHex"
+          @update:model-value="handleBackgroundHexUpdate"
+        />
       </q-menu>
     </q-btn>
   </div>

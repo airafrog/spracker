@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { textureLoader } from "@/services/texture";
+import { textureLoader } from "@/utils/texture";
 
 export class LayerService {
   private scene = new THREE.Scene();

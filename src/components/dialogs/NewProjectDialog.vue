@@ -2,9 +2,9 @@
 import { Notify } from "quasar";
 import { ref, shallowRef } from "vue";
 
-import { gltfService } from "@/services/gltf";
 import { useLayerStore, useModelStore } from "@/stores";
-import * as Rules from "@/utils/quasar";
+import { loadGltf } from "@/utils/gltf";
+import * as Rules from "@/utils/input-rules";
 
 const show = defineModel<boolean>({ required: true });
 
@@ -18,7 +18,7 @@ async function handleCreate() {
   if (!file.value) throw new Error("File is not defined");
 
   const fileUrl = URL.createObjectURL(file.value);
-  const gltf = await gltfService.load(fileUrl);
+  const gltf = await loadGltf(fileUrl);
 
   layerStore.resetStore();
   modelStore.setModel(gltf.scene);

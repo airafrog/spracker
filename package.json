@@ -14,7 +14,6 @@
     "@quasar/extras": "^1.17.0",
     "client-zip": "^2.5.0",
     "pinia": "^3.0.3",
-    "pinia-plugin-persistedstate": "^4.4.1",
     "quasar": "^2.18.1",
     "sst": "3.17.10",
     "three": "^0.178.0",

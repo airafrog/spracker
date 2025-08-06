@@ -26,3 +26,10 @@ Spracker is built on TypeScript, Vite, Vue.js, and Three.js!
 ### Running locally
 
 1. `pnpm dev`
+
+# Deployment
+
+Spracker is set up to be deployed as a static site to AWS. [sst.dev](https://sst.dev/) is being utilized to perform deployments. Two scripts are included in the package.json to manage deploys:
+
+- `pnpm sst:deploy` - Deploys the static site with a stage of "prod" to the configured AWS environment
+- `pnpm sst:remove` - Removes the "prod" stack from the AWS environment

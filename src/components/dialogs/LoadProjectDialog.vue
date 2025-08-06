@@ -2,11 +2,11 @@
 import { Loading, Notify } from "quasar";
 import { shallowRef } from "vue";
 
-import { gltfService } from "@/services/gltf";
+import { loadGltf } from "@/utils/gltf";
 import { useLayerStore, useModelStore } from "@/stores";
 import type { Layer } from "@/types";
 import { zSprackFile } from "@/types";
-import * as Rules from "@/utils/quasar";
+import * as Rules from "@/utils/input-rules";
 
 const show = defineModel<boolean>({ required: true });
 
@@ -28,7 +28,7 @@ async function handleLoad() {
     const glbArrayBuffer = new Uint8Array(glbData).buffer;
     const glbBlob = new Blob([glbArrayBuffer], { type: "model/gltf-binary" });
     const glbBlobUrl = URL.createObjectURL(glbBlob);
-    const gltf = await gltfService.load(glbBlobUrl);
+    const gltf = await loadGltf(glbBlobUrl);
 
     layerStore.resetStore();
     layerStore.projectName = sprackFile.projectName;

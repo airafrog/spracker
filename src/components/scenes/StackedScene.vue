@@ -4,14 +4,15 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
 import { CameraService } from "@/services/camera";
-import { useLayerStore, useModelStore, useSettingsStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
 const modelStore = useModelStore();
-const settingsStore = useSettingsStore();
+
 const cameraMode = ref<CameraMode>("perspective");
 const downscaleFactor = ref(1);
+const backgroundHex = ref("#1a131a");
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
@@ -84,12 +85,6 @@ onMounted(() => {
 
   window.addEventListener("resize", resizeFunction);
   watch(downscaleFactor, resizeFunction);
-
-  watch(
-    () => settingsStore.stackedSceneBackgroundHex,
-    (newColor) => (scene.background = new THREE.Color(newColor)),
-    { immediate: true }
-  );
 });
 
 onUnmounted(() => {
@@ -98,8 +93,16 @@ onUnmounted(() => {
   window.removeEventListener("resize", resizeFunction);
 });
 
+watch(backgroundHex, (newHex) => (scene.background = new THREE.Color(newHex)), {
+  immediate: true,
+});
+
 function handleViewAxis(axis: Axis, distance: number) {
   cameraService.viewAxis(axis, distance);
+}
+
+function handleSetBackgroundHex(hex: string) {
+  backgroundHex.value = hex;
 }
 
 function handleSetCameraMode(mode: CameraMode) {
@@ -115,9 +118,10 @@ function handleSetDownscaleFactor(factor: number) {
 <template>
   <div class="full-height" style="position: relative">
     <scene-toolbar
-      v-model:background-hex="settingsStore.stackedSceneBackgroundHex"
+      :background-hex="backgroundHex"
       :camera-mode="cameraMode"
       :downscale-factor="downscaleFactor"
+      @set-background-hex="handleSetBackgroundHex"
       @set-camera-mode="handleSetCameraMode"
       @set-downscale-factor="handleSetDownscaleFactor"
       @view-axis="handleViewAxis"

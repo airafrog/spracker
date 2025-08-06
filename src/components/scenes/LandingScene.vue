@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import { CameraService } from "@/services/camera";
-import { gltfService } from "@/services/gltf";
+import { loadGltf } from "@/utils/gltf";
 
 const DOWNSCALE_FACTOR = 5;
 const scene = new THREE.Scene();
@@ -32,7 +32,7 @@ onMounted(async () => {
   const light = new THREE.AmbientLight(0xffffff, 2);
   scene.add(light);
 
-  const gltf = await gltfService.load("/models/car-stack.glb");
+  const gltf = await loadGltf("/models/car-stack.glb");
   gltfScene = gltf.scene;
   scene.add(gltfScene);
 

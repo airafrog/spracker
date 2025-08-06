@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 import DeleteLayerDialog from "@/components/dialogs/DeleteLayerDialog.vue";
-import { useLayerStore, useSettingsStore } from "@/stores";
+import { useLayerStore } from "@/stores";
 import type { Layer } from "@/types";
 
 const props = defineProps<{
@@ -10,8 +10,8 @@ const props = defineProps<{
 }>();
 
 const layerStore = useLayerStore();
-const settingsStore = useSettingsStore();
 const showDeleteDialog = ref(false);
+const pngBackgroundHex = ref("#1a131a");
 
 function handleThicknessUpdate(value: number | string | null) {
   if (value === null) return;
@@ -106,7 +106,7 @@ function handleSetOrder(value: number | string | null) {
       <div class="col">
         <div
           class="flex justify-center items-center full-height"
-          :style="{ 'background-color': settingsStore.pngBackgroundHex }"
+          :style="{ 'background-color': pngBackgroundHex }"
         >
           <div class="full-width full-height q-pa-lg">
             <img
@@ -126,7 +126,7 @@ function handleSetOrder(value: number | string | null) {
           style="position: absolute; left: 0; bottom: 0"
         >
           <q-popup-proxy>
-            <q-color v-model="settingsStore.pngBackgroundHex" />
+            <q-color v-model="pngBackgroundHex" />
           </q-popup-proxy>
         </q-btn>
       </div>

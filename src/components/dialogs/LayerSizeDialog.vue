@@ -3,7 +3,7 @@ import { Notify } from "quasar";
 import { computed, ref } from "vue";
 
 import { useLayerStore, useModelStore } from "@/stores";
-import * as Rules from "@/utils/quasar";
+import * as Rules from "@/utils/input-rules";
 
 const model = defineModel<boolean>({ required: true });
 

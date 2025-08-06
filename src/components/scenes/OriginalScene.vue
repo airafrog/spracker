@@ -5,23 +5,23 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import SceneToolbar from "@/components/toolbars/SceneToolbar.vue";
 import { CameraService } from "@/services/camera";
-import { useLayerStore, useModelStore, useSettingsStore } from "@/stores";
+import { useLayerStore, useModelStore } from "@/stores";
 import type { Axis, CameraMode } from "@/types";
 
 const layerStore = useLayerStore();
-const { activeLayer } = storeToRefs(layerStore);
-
 const modelStore = useModelStore();
+const { activeLayer } = storeToRefs(layerStore);
 const { model } = storeToRefs(modelStore);
 
-const settingsStore = useSettingsStore();
 const cameraMode = ref<CameraMode>("perspective");
 const downscaleFactor = ref(1);
+const backgroundHex = ref("#120d12");
 
 const scene = new THREE.Scene();
 const canvas = ref<HTMLCanvasElement>();
 const cameraService = new CameraService();
 let renderer: THREE.WebGLRenderer;
+let sceneModel = new THREE.Object3D();
 let resizeFunction = () => {};
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -89,7 +89,9 @@ watch(
       modelStore.modelSize.z * 2
     );
 
-    scene.add(newModel);
+    scene.remove(sceneModel);
+    sceneModel = newModel.clone();
+    scene.add(sceneModel);
   },
   { immediate: true }
 );
@@ -121,14 +123,16 @@ watch(
   }
 );
 
-watch(
-  () => settingsStore.originalSceneBackgroundHex,
-  (newColor) => (scene.background = new THREE.Color(newColor)),
-  { immediate: true }
-);
+watch(backgroundHex, (newHex) => (scene.background = new THREE.Color(newHex)), {
+  immediate: true,
+});
 
 function handleViewAxis(axis: Axis, distance: number) {
   cameraService.viewAxis(axis, distance);
+}
+
+function handleSetBackgroundHex(hex: string) {
+  backgroundHex.value = hex;
 }
 
 function handleSetCameraMode(mode: CameraMode) {
@@ -144,9 +148,10 @@ function handleSetDownscaleFactor(factor: number) {
 <template>
   <div class="full-height" style="position: relative">
     <scene-toolbar
-      v-model:background-hex="settingsStore.originalSceneBackgroundHex"
+      :background-hex="backgroundHex"
       :camera-mode="cameraMode"
       :downscale-factor="downscaleFactor"
+      @set-background-hex="handleSetBackgroundHex"
       @set-camera-mode="handleSetCameraMode"
       @set-downscale-factor="handleSetDownscaleFactor"
       @view-axis="handleViewAxis"

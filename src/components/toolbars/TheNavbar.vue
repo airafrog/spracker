@@ -4,8 +4,8 @@ import { ref } from "vue";
 
 import NewProjectDialog from "@/components/dialogs/NewProjectDialog.vue";
 import LoadProjectDialog from "@/components/dialogs/LoadProjectDialog.vue";
-import { gltfService } from "@/services/gltf";
-import { blobService } from "@/services/blob";
+import { exportGltf } from "@/utils/gltf";
+import { downloadBlob } from "@/utils/blob";
 import { useLayerStore, useModelStore } from "@/stores";
 import type { SprackFile } from "@/types";
 import { Loading, Notify } from "quasar";
@@ -21,7 +21,7 @@ async function handleSaveProject() {
 
     if (!modelStore.model) throw new Error("No model data available to save");
 
-    const glb = await gltfService.export(modelStore.model, true);
+    const glb = await exportGltf(modelStore.model, true);
     if (!(glb instanceof ArrayBuffer)) {
       throw new Error("GLB is not an ArrayBuffer");
     }
@@ -38,7 +38,7 @@ async function handleSaveProject() {
       type: "application/json",
     });
 
-    blobService.downloadBlob(fileBlob, `${layerStore.projectName}.sprack`);
+    downloadBlob(fileBlob, `${layerStore.projectName}.sprack`);
 
     Notify.create({
       type: "positive",
@@ -59,7 +59,7 @@ async function handle3dExport(binary: boolean) {
   try {
     Loading.show({ message: "Exporting file..." });
 
-    const output = await gltfService.export(layerStore.stackGroup, binary);
+    const output = await exportGltf(layerStore.stackGroup, binary);
     const isArrayBuffer = output instanceof ArrayBuffer;
 
     const blob = isArrayBuffer
@@ -70,12 +70,12 @@ async function handle3dExport(binary: boolean) {
       ? `${layerStore.projectName}.glb`
       : `${layerStore.projectName}.gltf`;
 
-    blobService.downloadBlob(blob, fileName);
+    downloadBlob(blob, fileName);
   } catch (error) {
     console.error(error);
     Notify.create({
       type: "negative",
-      message: `Failed to export project: ${error}`,
+      message: `Failed to export file: ${error}`,
     });
   } finally {
     Loading.hide();
@@ -100,7 +100,7 @@ async function handlePngExport() {
     );
 
     const zipBlob = await downloadZip(files).blob();
-    blobService.downloadBlob(zipBlob, `${layerStore.projectName}.zip`);
+    downloadBlob(zipBlob, `${layerStore.projectName}.zip`);
 
     Notify.create({
       type: "positive",
