@@ -46,10 +46,10 @@ const showLoadProjectDialog = ref(false);
       <content-image-row src="/images/example-car.png" class="mb-xxl" reverse>
         <h2 class="q-mb-md">What is it?</h2>
         <p>
-          Spracker is a tool that generates sprite stacks from 3D models.
-          Creating sprite-stacked assets can be a time consuming task. Spracker
-          aims to streamline the process by providing a quick way to convert
-          your existing 3D assets!
+          Spracker is a tool that creates sprite stacks from 3D models. Creating
+          sprite-stacked assets can be a time consuming task. Spracker aims to
+          streamline the process by providing a quick way to convert your
+          existing 3D assets!
         </p>
         <p>
           Spracker is NOT an image editing tool. Stacks will often require some
